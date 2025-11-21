@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S-Home v12.1 Final</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>S-Home v14.0 Premium</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -38,24 +38,28 @@
 
     <style>
         body {
+            background-color: #0B0C10;
+            color: white;
             overflow: hidden;
         }
 
-        /* Glassmorphism */
+        /* Premium Glass Effect */
         .glass-panel {
-            background: rgba(21, 22, 28, 0.9);
+            background: rgba(21, 22, 28, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
-        /* Sayfa Yapısı */
+        /* Sayfa Düzeni */
         .page-content {
             display: none;
             height: 100%;
             overflow-y: auto;
-            padding-bottom: 100px;
+            padding-bottom: 150px;
+            /* Mobilde alt kısım kesilmesin */
+            -webkit-overflow-scrolling: touch;
         }
 
         .page-content.active {
@@ -65,11 +69,12 @@
 
         /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
+            height: 5px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #0B0C10;
+            background: transparent;
         }
 
         ::-webkit-scrollbar-thumb {
@@ -77,29 +82,31 @@
             border-radius: 4px;
         }
 
-        /* Login Ekranı Tıklama Fix */
-        #login-screen {
-            pointer-events: auto !important;
-            z-index: 9999 !important;
+        /* DB Table Responsive */
+        .db-table-container {
+            overflow-x: auto;
+            border-radius: 1rem;
         }
 
-        #app-container {
-            z-index: 1;
+        .db-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
         }
 
-        /* DB Tablo */
         .db-table th {
             text-align: left;
-            padding: 12px;
+            padding: 16px;
             color: #00D2FF;
             font-size: 0.75rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            white-space: nowrap;
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .db-table td {
-            padding: 12px;
+            padding: 14px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             font-size: 0.9rem;
             color: #ccc;
@@ -111,12 +118,13 @@
             color: white;
         }
 
+        /* Form Elementleri */
         .db-input {
             width: 100%;
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 10px 14px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 12px;
             color: white;
             outline: none;
             transition: 0.3s;
@@ -128,7 +136,7 @@
             background: rgba(0, 0, 0, 0.6);
         }
 
-        /* Form Elemanları */
+        /* Toggle & Range */
         .toggle-checkbox:checked {
             right: 0;
             border-color: #00D2FF;
@@ -181,7 +189,7 @@
             background: #fff;
             cursor: pointer;
             margin-top: -6px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         input[type=range]::-webkit-slider-runnable-track {
@@ -192,7 +200,6 @@
             border-radius: 2px;
         }
 
-        /* Modal */
         .modal-overlay {
             display: none;
         }
@@ -202,522 +209,501 @@
             animation: zoomIn 0.3s ease-out;
         }
 
+        #login-screen {
+            pointer-events: auto !important;
+            z-index: 9999 !important;
+        }
+
         button,
         .cursor-pointer {
-            cursor: pointer !important;
+            cursor: pointer;
         }
     </style>
 </head>
 
-<body class="bg-dark-bg text-white font-sans h-screen overflow-hidden flex selection:bg-neon-cyan selection:text-black"
-    onclick="closeNotificationsOutside(event)">
+<body class="h-[100dvh] w-full flex bg-dark-bg text-white">
 
     <div id="login-screen"
-        class="fixed inset-0 flex items-center justify-center bg-dark-bg bg-[url('https://images.unsplash.com/photo-1558002038-1091a166111c?q=80&w=2000')] bg-cover bg-center transition-opacity duration-700">
+        class="fixed inset-0 flex items-center justify-center bg-dark-bg bg-[url('https://images.unsplash.com/photo-1558002038-1091a166111c?q=80&w=2000')] bg-cover bg-center transition-opacity duration-700 z-[9999]">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
         <div
-            class="glass-panel p-10 rounded-3xl w-full max-w-md relative z-10 text-center border border-neon-cyan/20 shadow-[0_0_60px_rgba(0,210,255,0.15)] animate-zoom-in">
+            class="glass-panel p-8 md:p-10 rounded-[2rem] w-11/12 max-w-md relative z-10 text-center border border-neon-cyan/20 shadow-[0_0_60px_rgba(0,210,255,0.15)] animate-zoom-in">
             <div
-                class="w-24 h-24 mx-auto mb-8 rounded-full bg-gradient-to-tr from-neon-cyan to-blue-600 flex items-center justify-center shadow-[0_0_30px_rgba(0,210,255,0.5)] animate-pulse-slow">
-                <i class="ph-fill ph-database text-white text-4xl"></i>
+                class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-tr from-neon-cyan to-blue-600 flex items-center justify-center shadow-[0_0_30px_rgba(0,210,255,0.5)] animate-pulse-slow">
+                <i class="ph-fill ph-database text-white text-3xl"></i>
             </div>
-            <h2 class="text-4xl font-bold mb-2 tracking-tight">S-Home</h2>
-            <p class="text-gray-400 mb-10 text-sm uppercase tracking-widest">System Access v12.1</p>
-            <div class="relative mb-8">
-                <input type="password" id="passcode" placeholder="1234" maxlength="4"
-                    class="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-center text-4xl tracking-[1em] outline-none focus:border-neon-cyan focus:bg-white/10 transition font-mono text-neon-cyan placeholder-gray-600">
-            </div>
+            <h2 class="text-3xl font-bold mb-2">S-Home</h2>
+            <p class="text-gray-400 mb-8 text-xs uppercase tracking-widest">Secure System v14.0</p>
+            <input type="password" id="passcode" placeholder="1234" maxlength="4"
+                class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-center text-3xl tracking-[0.5em] outline-none focus:border-neon-cyan transition font-mono mb-6">
             <button onclick="attemptLogin()"
-                class="w-full py-4 bg-gradient-to-r from-neon-cyan to-blue-600 text-white font-bold rounded-2xl hover:scale-[1.02] transition shadow-lg shadow-cyan-500/20 cursor-pointer">Panele
-                Giriş</button>
-            <p id="login-error" class="text-red-500 text-sm mt-4 hidden font-medium"><i class="ph-bold ph-warning"></i>
-                Hatalı Şifre</p>
+                class="w-full py-4 bg-gradient-to-r from-neon-cyan to-blue-600 text-white font-bold rounded-xl hover:scale-[1.02] transition shadow-lg">Giriş
+                Yap</button>
+            <p id="login-error" class="text-red-500 text-sm mt-4 hidden">Hatalı Şifre</p>
         </div>
     </div>
 
-    <div id="app-container" class="flex w-full h-full opacity-0 transition duration-1000 blur-md pointer-events-none">
-
-        <aside id="sidebar"
-            class="fixed inset-y-0 left-0 z-40 w-72 bg-dark-panel flex flex-col justify-between border-r border-white/5 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex-shrink-0">
-            <div onclick="switchPage('dashboard')" class="p-8 flex items-center gap-4 cursor-pointer group">
-                <div
-                    class="w-12 h-12 rounded-2xl bg-gradient-to-br from-neon-cyan to-blue-600 flex items-center justify-center shadow-lg">
-                    <i class="ph-fill ph-house-line text-white text-2xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-bold tracking-wide group-hover:text-neon-cyan transition">S-Home</h1>
-                    <div class="flex items-center gap-1 text-xs text-gray-500"><span
-                            class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Online</div>
-                </div>
-            </div>
-
-            <nav class="flex-1 px-6 space-y-2 mt-4 overflow-y-auto">
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider pl-4 mb-2">Arayüz</p>
-                <button onclick="switchPage('dashboard')" id="nav-dashboard"
-                    class="nav-btn w-full flex items-center gap-4 p-4 rounded-2xl transition-all bg-gradient-to-r from-neon-cyan/10 to-transparent border-l-4 border-neon-cyan text-neon-cyan"><i
-                        class="ph-fill ph-squares-four text-xl"></i> <span class="font-medium">Dashboard</span></button>
-                <button onclick="switchPage('cameras')" id="nav-cameras"
-                    class="nav-btn w-full flex items-center gap-4 p-4 rounded-2xl text-gray-400 hover:bg-white/5 transition-all border-l-4 border-transparent"><i
-                        class="ph ph-video-camera text-xl"></i> <span class="font-medium">Kameralar</span></button>
-                <button onclick="switchPage('security')" id="nav-security"
-                    class="nav-btn w-full flex items-center gap-4 p-4 rounded-2xl text-gray-400 hover:bg-white/5 transition-all border-l-4 border-transparent"><i
-                        class="ph ph-shield-check text-xl"></i> <span class="font-medium">Güvenlik</span></button>
-                <button onclick="switchPage('devices')" id="nav-devices"
-                    class="nav-btn w-full flex items-center gap-4 p-4 rounded-2xl text-gray-400 hover:bg-white/5 transition-all border-l-4 border-transparent"><i
-                        class="ph ph-devices text-xl"></i> <span class="font-medium">Cihazlar</span></button>
-
-                <div class="my-4 border-t border-white/5"></div>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider pl-4 mb-2">Yönetim</p>
-                <button onclick="switchPage('db-panel')" id="nav-db-panel"
-                    class="nav-btn w-full flex items-center gap-4 p-4 rounded-2xl text-gray-400 hover:bg-white/5 transition-all border-l-4 border-transparent group"><i
-                        class="ph-fill ph-database text-xl group-hover:text-neon-pink transition"></i> <span
-                        class="font-medium">Veritabanı</span></button>
-            </nav>
-
-            <div class="p-6">
-                <button onclick="switchPage('profile')" id="nav-profile"
-                    class="w-full text-left glass-panel p-4 rounded-2xl flex items-center gap-4 hover:bg-white/10 transition group border-l-4 border-transparent nav-btn">
-                    <img id="sidebar-avatar" src="https://i.pravatar.cc/150?img=11"
-                        class="w-10 h-10 rounded-full border-2 border-gray-600 group-hover:border-neon-cyan transition shadow-lg">
-                    <div>
-                        <p id="sidebar-name" class="text-sm font-bold text-white">Thomas A.</p>
-                        <p id="sidebar-role" class="text-xs text-gray-400 group-hover:text-neon-cyan transition">Ayarlar
-                        </p>
-                    </div>
-                </button>
-            </div>
-        </aside>
-
-        <main class="flex-1 h-full relative overflow-hidden p-4 md:p-8 bg-[#0B0C10]">
+    <aside id="sidebar"
+        class="fixed inset-y-0 left-0 z-50 w-72 bg-dark-panel flex flex-col border-r border-white/5 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex-shrink-0 h-full shadow-2xl">
+        <div class="p-6 flex items-center gap-4 border-b border-white/5">
             <div
-                class="fixed top-[-20%] left-[20%] w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[180px] pointer-events-none">
+                class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-cyan to-blue-600 flex items-center justify-center shadow-lg">
+                <i class="ph-fill ph-house-line text-white text-xl"></i></div>
+            <div>
+                <h1 class="text-xl font-bold tracking-wide">S-Home</h1>
+                <div class="flex items-center gap-1 text-[10px] text-gray-500"><span
+                        class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Online</div>
+            </div>
+            <button onclick="toggleSidebar()" class="md:hidden ml-auto text-gray-400 hover:text-white"><i
+                    class="ph-bold ph-x text-2xl"></i></button>
+        </div>
+        <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
+            <p class="text-[10px] text-gray-500 font-bold uppercase pl-4 mb-2">Menü</p>
+            <button onclick="switchPage('dashboard')" id="nav-dashboard"
+                class="nav-btn w-full flex items-center gap-4 p-3 rounded-xl transition-all text-gray-400 hover:bg-white/5"><i
+                    class="ph-fill ph-squares-four text-lg"></i> <span
+                    class="text-sm font-medium">Dashboard</span></button>
+            <button onclick="switchPage('cameras')" id="nav-cameras"
+                class="nav-btn w-full flex items-center gap-4 p-3 rounded-xl text-gray-400 hover:bg-white/5"><i
+                    class="ph ph-video-camera text-lg"></i> <span class="text-sm font-medium">Kameralar</span></button>
+            <button onclick="switchPage('security')" id="nav-security"
+                class="nav-btn w-full flex items-center gap-4 p-3 rounded-xl text-gray-400 hover:bg-white/5"><i
+                    class="ph ph-shield-check text-lg"></i> <span class="text-sm font-medium">Güvenlik</span></button>
+            <button onclick="switchPage('devices')" id="nav-devices"
+                class="nav-btn w-full flex items-center gap-4 p-3 rounded-xl text-gray-400 hover:bg-white/5"><i
+                    class="ph ph-devices text-lg"></i> <span class="text-sm font-medium">Cihazlar</span></button>
+            <div class="my-4 border-t border-white/5"></div>
+            <p class="text-[10px] text-gray-500 font-bold uppercase pl-4 mb-2">Yönetim</p>
+            <button onclick="switchPage('db-panel')" id="nav-db-panel"
+                class="nav-btn w-full flex items-center gap-4 p-3 rounded-xl text-gray-400 hover:bg-white/5"><i
+                    class="ph-fill ph-database text-lg"></i> <span
+                    class="text-sm font-medium">Veritabanı</span></button>
+        </nav>
+        <div class="p-4 border-t border-white/5">
+            <button onclick="switchPage('profile')" id="nav-profile"
+                class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition text-left nav-btn">
+                <img id="sidebar-avatar" src="https://i.pravatar.cc/150?img=11"
+                    class="w-10 h-10 rounded-full border-2 border-gray-600">
+                <div>
+                    <p id="sidebar-name" class="text-xs font-bold text-white">Thomas A.</p>
+                    <p id="sidebar-role" class="text-[10px] text-gray-400">Ayarlar</p>
+                </div>
+            </button>
+        </div>
+    </aside>
+
+    <div id="sidebar-overlay" onclick="toggleSidebar()"
+        class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <main class="flex-1 h-full relative overflow-hidden flex flex-col bg-[#0B0C10]">
+        <div class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+            <div
+                class="absolute top-[-10%] left-[-10%] w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-blue-600/10 rounded-full blur-[100px]">
             </div>
             <div
-                class="fixed bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-neon-purple/10 rounded-full blur-[180px] pointer-events-none">
+                class="absolute bottom-[-10%] right-[-10%] w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-neon-purple/10 rounded-full blur-[100px]">
             </div>
+        </div>
 
-            <div class="flex justify-between items-end mb-10 relative z-30 animate-fade-in">
+        <header class="px-6 py-6 md:py-8 flex justify-between items-center z-30 shrink-0">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSidebar()" class="md:hidden text-white hover:text-neon-cyan"><i
+                        class="ph-bold ph-list text-3xl"></i></button>
                 <div>
-                    <button onclick="toggleSidebar()"
-                        class="md:hidden p-2 -ml-2 text-white hover:text-neon-cyan mb-2"><i
-                            class="ph-bold ph-list text-3xl"></i></button>
-                    <h2 class="text-3xl md:text-4xl font-bold" id="page-title">Genel Bakış</h2>
-                    <p class="text-gray-400 mt-1 font-light text-sm md:text-base">Sistem durumu: <span
-                            class="text-green-400 font-medium">Stabil</span></p>
+                    <h2 class="text-2xl md:text-3xl font-bold" id="page-title">Genel Bakış</h2>
+                    <p class="text-gray-400 text-xs md:text-sm">Sistem: <span class="text-green-400">Stabil</span></p>
                 </div>
-                <div class="hidden md:flex items-center gap-6">
-                    <div class="text-right">
-                        <div id="clock"
-                            class="text-2xl font-mono font-bold text-neon-cyan drop-shadow-[0_0_8px_rgba(0,210,255,0.5)]">
-                            --:--</div>
-                        <div class="text-xs text-gray-500 font-medium tracking-wide uppercase">20 Kasım 2025</div>
-                    </div>
-                    <div class="relative">
-                        <button onclick="toggleNotifications(event)"
-                            class="glass-panel w-14 h-14 rounded-full flex items-center justify-center hover:text-neon-pink transition relative group"><i
-                                class="ph ph-bell text-2xl group-hover:rotate-12 transition"></i><span
-                                class="absolute top-3 right-4 w-2.5 h-2.5 bg-neon-pink rounded-full"></span></button>
-                        <div id="notification-panel"
-                            class="hidden absolute top-16 right-0 w-80 glass-panel rounded-2xl p-4 animate-zoom-in border border-white/10 shadow-2xl z-[60]">
-                            <div class="flex justify-between items-center border-b border-white/10 pb-2 mb-2">
-                                <h4 class="font-bold text-sm">Bildirimler</h4><span
-                                    class="text-xs text-neon-cyan cursor-pointer hover:underline">Temizle</span>
-                            </div>
-                            <div class="space-y-3 max-h-60 overflow-y-auto">
-                                <div
-                                    class="flex gap-3 items-start p-2 hover:bg-white/5 rounded-lg transition cursor-pointer">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center shrink-0">
-                                        <i class="ph-fill ph-warning"></i></div>
-                                    <div>
-                                        <p class="text-sm font-bold">Hareket Algılandı</p>
-                                        <p class="text-[10px] text-gray-400">Arka Bahçe • 2dk önce</p>
-                                    </div>
-                                </div>
-                                <div
-                                    class="flex gap-3 items-start p-2 hover:bg-white/5 rounded-lg transition cursor-pointer">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-neon-cyan/20 text-neon-cyan flex items-center justify-center shrink-0">
-                                        <i class="ph-fill ph-info"></i></div>
-                                    <div>
-                                        <p class="text-sm font-bold">Sistem Güncellendi</p>
-                                        <p class="text-[10px] text-gray-400">v12.1 Yüklendi</p>
-                                    </div>
-                                </div>
-                            </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right hidden sm:block">
+                    <div id="clock" class="text-xl font-mono font-bold text-neon-cyan">--:--</div>
+                    <div class="text-[10px] text-gray-500">20.11.2025</div>
+                </div>
+                <div class="relative">
+                    <button onclick="toggleNotifications(event)"
+                        class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:text-neon-pink transition"><i
+                            class="ph ph-bell text-xl"></i><span
+                            class="absolute top-2 right-2 w-2 h-2 bg-neon-pink rounded-full"></span></button>
+                    <div id="notification-panel"
+                        class="hidden absolute top-12 right-0 w-72 glass-panel rounded-xl p-4 border border-white/10 shadow-xl z-[60]">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2 mb-2">
+                            <h4 class="font-bold text-sm">Bildirimler</h4><span
+                                class="text-xs text-neon-cyan">Temizle</span>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="text-xs p-2 bg-white/5 rounded">Hareket Algılandı <span
+                                    class="text-gray-400 block">2dk önce</span></div>
                         </div>
                     </div>
                 </div>
             </div>
+        </header>
 
-            <div id="dashboard" class="page-content active space-y-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div
-                        class="glass-panel p-8 rounded-[2rem] flex items-center justify-between relative overflow-hidden hover:-translate-y-2 transition duration-300">
-                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-neon-cyan/20 rounded-full blur-2xl"></div>
-                        <div>
-                            <p class="text-gray-400 text-sm font-medium uppercase tracking-wide">Ortam</p>
-                            <h3 class="text-5xl font-bold mt-2">24°C</h3>
-                        </div><i class="ph-fill ph-thermometer text-5xl text-neon-cyan"></i>
-                    </div>
-                    <div class="glass-panel p-8 rounded-[2rem] flex items-center justify-between relative overflow-hidden hover:-translate-y-2 transition duration-300 cursor-pointer"
-                        onclick="switchPage('security')">
-                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-green-500/20 rounded-full blur-2xl"></div>
-                        <div>
-                            <p class="text-gray-400 text-sm font-medium uppercase tracking-wide">Güvenlik</p>
-                            <h3 class="text-5xl font-bold mt-2 text-green-400">Aktif</h3>
-                        </div><i class="ph-fill ph-shield-check text-5xl text-green-400"></i>
-                    </div>
-                    <div
-                        class="glass-panel p-8 rounded-[2rem] flex items-center justify-between relative overflow-hidden hover:-translate-y-2 transition duration-300">
-                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-yellow-500/20 rounded-full blur-2xl"></div>
-                        <div>
-                            <p class="text-gray-400 text-sm font-medium uppercase tracking-wide">Günlük</p>
-                            <h3 class="text-5xl font-bold mt-2">12.4</h3>
-                        </div><i class="ph-fill ph-lightning text-5xl text-yellow-400"></i>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[500px]">
-                    <div class="lg:col-span-2 glass-panel p-8 rounded-[2rem] flex flex-col">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h3 class="text-xl font-bold mb-1">Haftalık Enerji</h3>
-                                <div class="text-3xl font-bold text-white mt-2">13.8 <span
-                                        class="text-sm text-gray-400 font-normal">kWh (Ort.)</span></div>
-                            </div><select
-                                class="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm outline-none">
-                                <option>Bu Hafta</option>
-                            </select>
-                        </div>
-                        <div class="flex-1 w-full relative"><canvas id="energyChart"></canvas></div>
-                    </div>
-                    <div class="glass-panel p-2 rounded-[2rem] relative overflow-hidden group cursor-pointer border border-transparent hover:border-neon-cyan/50 transition shadow-2xl"
-                        onclick="openCameraSelector()">
-                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800"
-                            class="w-full h-full object-cover rounded-[1.5rem] opacity-60 group-hover:opacity-90 transition duration-700 transform group-hover:scale-105">
+        <div class="flex-1 overflow-hidden relative">
+
+            <div id="dashboard" class="page-content active px-4 md:px-8">
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div
-                            class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 bg-black/40 backdrop-blur-[2px]">
+                            class="glass-panel p-6 rounded-2xl flex items-center justify-between relative overflow-hidden group hover:-translate-y-1 transition duration-300">
                             <div
-                                class="bg-neon-cyan text-black px-8 py-4 rounded-full font-bold flex items-center gap-3 transform translate-y-4 group-hover:translate-y-0 transition shadow-[0_0_20px_rgba(0,210,255,0.6)]">
-                                <i class="ph-bold ph-corners-out text-xl"></i> Genişlet</div>
+                                class="absolute -right-6 -top-6 w-24 h-24 bg-neon-cyan/20 rounded-full blur-2xl group-hover:bg-neon-cyan/30 transition">
+                            </div>
+                            <div class="relative z-10">
+                                <p class="text-gray-400 text-xs uppercase tracking-wider">Ortam</p>
+                                <h3 class="text-4xl font-bold mt-1">24°C</h3>
+                            </div>
+                            <i class="ph-fill ph-thermometer text-4xl text-neon-cyan relative z-10"></i>
+                        </div>
+                        <div class="glass-panel p-6 rounded-2xl flex items-center justify-between relative overflow-hidden group hover:-translate-y-1 transition duration-300 cursor-pointer"
+                            onclick="switchPage('security')">
+                            <div
+                                class="absolute -right-6 -top-6 w-24 h-24 bg-green-500/20 rounded-full blur-2xl group-hover:bg-green-500/30 transition">
+                            </div>
+                            <div class="relative z-10">
+                                <p class="text-gray-400 text-xs uppercase tracking-wider">Güvenlik</p>
+                                <h3 class="text-4xl font-bold mt-1 text-green-400">Aktif</h3>
+                            </div>
+                            <i class="ph-fill ph-shield-check text-4xl text-green-400 relative z-10"></i>
                         </div>
                         <div
-                            class="absolute top-6 left-6 bg-red-600/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-white animate-pulse z-10 flex items-center gap-2">
-                            <span class="w-2 h-2 bg-white rounded-full"></span> LIVE</div>
-                        <div class="absolute bottom-6 left-6 z-10">
-                            <p class="font-bold text-xl">Salon Kamerası</p>
-                            <p class="text-xs text-gray-300">Görüntülemek için tıkla</p>
+                            class="glass-panel p-6 rounded-2xl flex items-center justify-between relative overflow-hidden group hover:-translate-y-1 transition duration-300">
+                            <div
+                                class="absolute -right-6 -top-6 w-24 h-24 bg-yellow-500/20 rounded-full blur-2xl group-hover:bg-yellow-500/30 transition">
+                            </div>
+                            <div class="relative z-10">
+                                <p class="text-gray-400 text-xs uppercase tracking-wider">Günlük</p>
+                                <h3 class="text-4xl font-bold mt-1">12.4</h3>
+                            </div>
+                            <i class="ph-fill ph-lightning text-4xl text-yellow-400 relative z-10"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 glass-panel p-6 rounded-2xl h-[350px] md:h-[400px] flex flex-col">
+                            <div class="flex justify-between mb-2">
+                                <h3 class="font-bold text-lg">Haftalık Enerji</h3> <span
+                                    class="text-neon-cyan font-bold text-xl">13.8 kWh</span>
+                            </div>
+                            <div class="flex-1 w-full relative"><canvas id="energyChart"></canvas></div>
+                        </div>
+                        <div class="glass-panel p-2 rounded-2xl h-[250px] md:h-[400px] relative overflow-hidden group cursor-pointer border border-transparent hover:border-neon-cyan/50 transition shadow-2xl"
+                            onclick="openCameraSelector()">
+                            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800"
+                                class="w-full h-full object-cover rounded-xl opacity-70 group-hover:opacity-90 transition duration-700 transform group-hover:scale-105">
+                            <div
+                                class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 bg-black/40 backdrop-blur-[2px]">
+                                <div
+                                    class="bg-neon-cyan text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition shadow-[0_0_20px_rgba(0,210,255,0.6)]">
+                                    <i class="ph-bold ph-corners-out text-lg"></i> Genişlet</div>
+                            </div>
+                            <div class="absolute bottom-4 left-4 z-10">
+                                <p class="font-bold text-lg">Salon</p>
+                                <p class="text-xs text-gray-300">Canlı İzle</p>
+                            </div>
+                            <div
+                                class="absolute top-4 left-4 bg-red-600 px-2 py-1 rounded text-[10px] font-bold animate-pulse">
+                                LIVE</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="profile" class="page-content">
-                <div class="glass-panel p-8 rounded-[2.5rem] max-w-5xl mx-auto border border-white/10 shadow-2xl">
-                    <div class="flex flex-col md:flex-row items-center gap-8 mb-10 border-b border-white/10 pb-8">
-                        <div class="relative group cursor-pointer"
-                            onclick="alert('Fotoğraf yükleme penceresi açıldı...')">
+            <div id="profile" class="page-content px-4 md:px-8">
+                <div
+                    class="glass-panel p-6 md:p-10 rounded-[2.5rem] max-w-5xl mx-auto border border-white/10 shadow-2xl">
+                    <div
+                        class="flex flex-col md:flex-row items-center gap-6 md:gap-8 mb-10 border-b border-white/10 pb-8">
+                        <div class="relative group cursor-pointer">
                             <img id="profile-img-preview" src="https://i.pravatar.cc/150?img=11"
-                                class="w-32 h-32 rounded-full border-4 border-neon-cyan shadow-[0_0_30px_rgba(0,210,255,0.3)] group-hover:opacity-80 transition">
+                                class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-neon-cyan shadow-[0_0_30px_rgba(0,210,255,0.3)] group-hover:opacity-80 transition">
                             <div
                                 class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                                <i class="ph-bold ph-camera text-3xl text-white drop-shadow-md"></i></div>
+                                <i class="ph-bold ph-camera text-4xl text-white drop-shadow-md"></i></div>
                             <div
-                                class="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-black">
+                                class="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-4 border-[#15161C]">
                             </div>
                         </div>
                         <div class="text-center md:text-left">
-                            <h2 class="text-3xl font-bold" id="profile-name-display">Thomas Anderson</h2>
-                            <p class="text-gray-400 flex items-center justify-center md:justify-start gap-2"><i
-                                    class="ph-fill ph-map-pin"></i> İzmir, TR • <span id="profile-role-display">Sistem
-                                    Yöneticisi</span></p>
+                            <h2 class="text-3xl md:text-4xl font-bold" id="profile-name-display">Thomas Anderson</h2>
+                            <p class="text-gray-400 flex items-center justify-center md:justify-start gap-2 mt-1"><i
+                                    class="ph-fill ph-map-pin text-neon-pink"></i> İzmir, TR • <span
+                                    id="profile-role-display" class="text-white">Sistem Yöneticisi</span></p>
                             <div class="flex justify-center md:justify-start gap-3 mt-4">
                                 <span
-                                    class="px-3 py-1 rounded-lg bg-neon-cyan/20 text-neon-cyan text-xs font-bold border border-neon-cyan/20">PRO
-                                    Üyelik</span>
+                                    class="px-3 py-1 rounded-lg bg-neon-cyan/10 text-neon-cyan text-xs font-bold border border-neon-cyan/20 flex items-center gap-1"><i
+                                        class="ph-fill ph-star"></i> PRO Üye</span>
                                 <span
-                                    class="px-3 py-1 rounded-lg bg-purple-500/20 text-purple-400 text-xs font-bold border border-purple-500/20">2
-                                    Yıllık Üye</span>
+                                    class="px-3 py-1 rounded-lg bg-purple-500/10 text-purple-400 text-xs font-bold border border-purple-500/20">2
+                                    Yıllık</span>
                             </div>
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
                         <div>
                             <h3 class="text-xl font-bold mb-6 flex items-center gap-2 text-neon-cyan"><i
-                                    class="ph-bold ph-user-circle"></i> Kişisel Bilgiler</h3>
+                                    class="ph-bold ph-user-circle text-2xl"></i> Kişisel Bilgiler</h3>
                             <div class="space-y-5">
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="space-y-1"><label
                                             class="text-xs text-gray-400 uppercase font-bold ml-1">Ad</label><input
-                                            type="text" id="p-name" value="Thomas"
-                                            class="w-full bg-black/30 border border-white/10 rounded-xl p-3 focus:border-neon-cyan outline-none transition text-white">
-                                    </div>
+                                            type="text" id="p-name" value="Thomas" class="db-input"></div>
                                     <div class="space-y-1"><label
                                             class="text-xs text-gray-400 uppercase font-bold ml-1">Soyad</label><input
-                                            type="text" id="p-surname" value="Anderson"
-                                            class="w-full bg-black/30 border border-white/10 rounded-xl p-3 focus:border-neon-cyan outline-none transition text-white">
-                                    </div>
+                                            type="text" id="p-surname" value="Anderson" class="db-input"></div>
                                 </div>
                                 <div class="space-y-1"><label
-                                        class="text-xs text-gray-400 uppercase font-bold ml-1">Unvan / Rol</label><input
-                                        type="text" id="p-role" value="Sistem Yöneticisi"
-                                        class="w-full bg-black/30 border border-white/10 rounded-xl p-3 focus:border-neon-cyan outline-none transition text-white">
-                                </div>
+                                        class="text-xs text-gray-400 uppercase font-bold ml-1">Rol</label><input
+                                        type="text" id="p-role" value="Sistem Yöneticisi" class="db-input"></div>
                                 <div class="space-y-1"><label
                                         class="text-xs text-gray-400 uppercase font-bold ml-1">E-Posta</label><input
-                                        type="email" value="thomas@shome.com"
-                                        class="w-full bg-black/30 border border-white/10 rounded-xl p-3 focus:border-neon-cyan outline-none transition text-white">
-                                </div>
+                                        type="email" value="thomas@shome.com" class="db-input"></div>
                                 <div class="space-y-1"><label
                                         class="text-xs text-gray-400 uppercase font-bold ml-1">Telefon</label><input
-                                        type="text" value="+90 555 123 4567"
-                                        class="w-full bg-black/30 border border-white/10 rounded-xl p-3 focus:border-neon-cyan outline-none transition text-white">
-                                </div>
+                                        type="text" value="+90 555 123 4567" class="db-input"></div>
                             </div>
                         </div>
+
                         <div>
                             <h3 class="text-xl font-bold mb-6 flex items-center gap-2 text-neon-purple"><i
-                                    class="ph-bold ph-sliders-horizontal"></i> Sistem Tercihleri</h3>
+                                    class="ph-bold ph-sliders-horizontal text-2xl"></i> Sistem Tercihleri</h3>
                             <div class="space-y-4 mb-8">
                                 <div
-                                    class="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 hover:border-neon-purple/30 transition">
-                                    <div class="flex items-center gap-3">
+                                    class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-neon-purple/30 transition group">
+                                    <div class="flex items-center gap-4">
                                         <div
-                                            class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
-                                            <i class="ph-fill ph-bell"></i></div><span>Anlık Bildirimler</span>
+                                            class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-110 transition">
+                                            <i class="ph-fill ph-bell text-xl"></i></div><span
+                                            class="font-medium">Bildirimler</span>
                                     </div>
                                     <div class="relative"><input type="checkbox" class="toggle-checkbox hidden" checked
                                             id="s1"><label for="s1" class="toggle-label"></label></div>
                                 </div>
                                 <div
-                                    class="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 hover:border-neon-purple/30 transition">
-                                    <div class="flex items-center gap-3">
+                                    class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-neon-purple/30 transition group">
+                                    <div class="flex items-center gap-4">
                                         <div
-                                            class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
-                                            <i class="ph-fill ph-moon"></i></div><span>Otomatik Gece Modu</span>
+                                            class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition">
+                                            <i class="ph-fill ph-moon text-xl"></i></div><span class="font-medium">Gece
+                                            Modu</span>
                                     </div>
                                     <div class="relative"><input type="checkbox" class="toggle-checkbox hidden" checked
                                             id="s2"><label for="s2" class="toggle-label"></label></div>
                                 </div>
                                 <div
-                                    class="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 hover:border-neon-purple/30 transition">
-                                    <div class="flex items-center gap-3">
+                                    class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-neon-purple/30 transition group">
+                                    <div class="flex items-center gap-4">
                                         <div
-                                            class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
-                                            <i class="ph-fill ph-shield-check"></i></div><span>2 Adımlı Doğrulama
-                                            (2FA)</span>
+                                            class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 group-hover:scale-110 transition">
+                                            <i class="ph-fill ph-shield-check text-xl"></i></div><span
+                                            class="font-medium">2FA Güvenlik</span>
                                     </div>
                                     <div class="relative"><input type="checkbox" class="toggle-checkbox hidden"
                                             id="s3"><label for="s3" class="toggle-label"></label></div>
                                 </div>
                             </div>
-                            <h4 class="text-sm font-bold text-gray-500 uppercase mb-3">Bölgesel Ayarlar</h4>
+                            <h4 class="text-xs font-bold text-gray-500 uppercase mb-3 ml-1">Bölge & Dil</h4>
                             <div class="grid grid-cols-2 gap-4">
                                 <select
-                                    class="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-sm outline-none text-white">
+                                    class="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-sm outline-none text-white focus:border-neon-purple">
                                     <option>Türkçe (TR)</option>
                                     <option>English (EN)</option>
                                 </select>
                                 <select
-                                    class="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-sm outline-none text-white">
+                                    class="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-sm outline-none text-white focus:border-neon-purple">
                                     <option>Santigrat (°C)</option>
                                     <option>Fahrenhayt (°F)</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-10 pt-6 border-t border-white/10 flex justify-between items-center">
-                        <button class="text-red-500 text-sm hover:underline hover:text-red-400">Hesabımı Sil</button>
-                        <div class="flex gap-4">
+
+                    <div
+                        class="mt-10 pt-6 border-t border-white/10 flex flex-col-reverse md:flex-row justify-between items-center gap-4">
+                        <button class="text-red-500 text-sm hover:underline hover:text-red-400 w-full md:w-auto">Hesabı
+                            Sil</button>
+                        <div class="flex gap-4 w-full md:w-auto">
                             <button
-                                class="px-6 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition">İptal</button>
+                                class="flex-1 md:flex-none px-6 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition font-medium">İptal</button>
                             <button onclick="saveDynamicProfile(this)"
-                                class="bg-neon-cyan hover:bg-cyan-300 text-black px-8 py-3 rounded-xl font-bold shadow-lg shadow-cyan-500/30 transition transform active:scale-95 flex items-center gap-2"><i
-                                    class="ph-bold ph-floppy-disk"></i> Değişiklikleri Kaydet</button>
+                                class="flex-1 md:flex-none bg-neon-cyan hover:bg-cyan-300 text-black px-8 py-3 rounded-xl font-bold shadow-lg shadow-cyan-500/30 transition transform active:scale-95 flex items-center justify-center gap-2"><i
+                                    class="ph-bold ph-floppy-disk"></i> Kaydet</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="db-panel" class="page-content space-y-6">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div
-                        class="glass-panel p-4 rounded-2xl flex flex-col items-center justify-center border-b-2 border-neon-cyan">
-                        <span class="text-3xl font-bold text-white" id="stat-users">0</span><span
-                            class="text-xs text-gray-400 uppercase tracking-wider">Kullanıcı</span></div>
-                    <div
-                        class="glass-panel p-4 rounded-2xl flex flex-col items-center justify-center border-b-2 border-neon-purple">
-                        <span class="text-3xl font-bold text-white" id="stat-houses">0</span><span
-                            class="text-xs text-gray-400 uppercase tracking-wider">Mülk</span></div>
-                    <div
-                        class="glass-panel p-4 rounded-2xl flex flex-col items-center justify-center border-b-2 border-green-500">
-                        <span class="text-3xl font-bold text-white" id="stat-devices">0</span><span
-                            class="text-xs text-gray-400 uppercase tracking-wider">Cihaz</span></div>
-                    <div
-                        class="glass-panel p-4 rounded-2xl flex flex-col items-center justify-center border-b-2 border-red-500">
-                        <span class="text-3xl font-bold text-white" id="stat-events">0</span><span
-                            class="text-xs text-gray-400 uppercase tracking-wider">Log Kaydı</span></div>
+            <div id="db-panel" class="page-content px-4 md:px-8 space-y-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="glass-panel p-4 rounded-xl text-center"><span class="text-2xl font-bold text-white"
+                            id="stat-users">0</span>
+                        <p class="text-[10px] text-gray-400 uppercase">Kullanıcı</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl text-center"><span class="text-2xl font-bold text-white"
+                            id="stat-houses">0</span>
+                        <p class="text-[10px] text-gray-400 uppercase">Mülk</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl text-center"><span class="text-2xl font-bold text-white"
+                            id="stat-devices">0</span>
+                        <p class="text-[10px] text-gray-400 uppercase">Cihaz</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl text-center"><span class="text-2xl font-bold text-white"
+                            id="stat-events">0</span>
+                        <p class="text-[10px] text-gray-400 uppercase">Log</p>
+                    </div>
                 </div>
-                <div class="glass-panel p-6 rounded-[2rem] flex flex-col border border-white/5 h-full min-h-[500px]">
+                <div class="glass-panel p-4 md:p-6 rounded-2xl border border-white/5 min-h-[500px] flex flex-col">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                        <h3 class="text-xl font-bold flex items-center gap-2 text-white"><i
+                        <h3 class="font-bold flex items-center gap-2 text-lg"><i
                                 class="ph-fill ph-table text-neon-cyan"></i> Veri Yönetimi</h3>
                         <select id="table-selector" onchange="changeTable()"
-                            class="w-full md:w-64 bg-black/40 border border-white/20 rounded-lg px-4 py-2 text-sm outline-none focus:border-neon-cyan text-white cursor-pointer">
-                            <option value="users">KULLANICILAR (Users)</option>
-                            <option value="houses">MÜLKLER (Houses)</option>
-                            <option value="devices">CİHAZLAR (Devices)</option>
-                            <option value="events">LOGLAR (Events)</option>
+                            class="w-full md:w-64 bg-black/40 border border-white/20 rounded-lg px-4 py-2 text-sm outline-none focus:border-neon-cyan text-white">
+                            <option value="users">KULLANICILAR</option>
+                            <option value="houses">MÜLKLER</option>
+                            <option value="devices">CİHAZLAR</option>
+                            <option value="events">LOGLAR</option>
                         </select>
                     </div>
-                    <div class="bg-white/5 p-6 rounded-2xl mb-6 border border-white/10 relative overflow-hidden">
+                    <div class="bg-white/5 p-4 rounded-xl mb-6 border border-white/10 relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-neon-cyan"></div>
-                        <h4
-                            class="text-sm font-bold text-gray-400 mb-4 uppercase tracking-wider flex justify-between items-center">
-                            <span id="form-title">Yeni Kayıt Ekle</span><span id="form-mode-badge"
-                                class="text-[10px] bg-neon-cyan text-black px-2 py-1 rounded">INSERT MODE</span></h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="dynamic-form"></div>
-                        <div class="flex justify-end gap-3 mt-6"><button onclick="clearForm()"
-                                class="px-4 py-2 bg-white/10 hover:bg-white/20 text-gray-300 rounded-lg text-sm font-bold transition">Temizle</button><button
-                                onclick="saveData()" id="save-btn"
-                                class="px-6 py-2 bg-neon-cyan hover:bg-cyan-400 text-black rounded-lg text-sm font-bold transition shadow-[0_0_10px_rgba(0,210,255,0.4)]">Ekle</button>
+                        <h4 class="text-xs font-bold text-gray-400 mb-3 uppercase flex justify-between"><span
+                                id="form-title">Yeni Ekle</span><span id="form-mode-badge"
+                                class="text-[10px] bg-neon-cyan text-black px-2 rounded">INSERT</span></h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="dynamic-form"></div>
+                        <div class="flex justify-end gap-3 mt-4">
+                            <button onclick="clearForm()"
+                                class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold">Temizle</button>
+                            <button onclick="saveData()" id="save-btn"
+                                class="px-6 py-2 bg-neon-cyan text-black rounded-lg text-xs font-bold hover:bg-cyan-300">Ekle</button>
                         </div>
                     </div>
-                    <div
-                        class="flex-1 overflow-auto bg-black/30 rounded-xl border border-white/5 relative min-h-[200px]">
-                        <table class="w-full db-table text-left border-collapse relative">
-                            <thead class="bg-dark-panel sticky top-0 z-10 shadow-md">
-                                <tr id="db-table-head"></tr>
-                            </thead>
-                            <tbody id="db-table-body"></tbody>
-                        </table>
-                        <div id="empty-state"
-                            class="hidden absolute inset-0 flex items-center justify-center text-gray-500 flex-col"><i
-                                class="ph-duotone ph-folder-open text-4xl mb-2"></i><span>Veri Bulunamadı</span></div>
+                    <div class="flex-1 overflow-hidden rounded-xl border border-white/5 bg-black/30 relative">
+                        <div class="db-table-container h-full overflow-auto">
+                            <table class="db-table">
+                                <thead class="bg-dark-panel sticky top-0 z-10 shadow">
+                                    <tr id="db-table-head"></tr>
+                                </thead>
+                                <tbody id="db-table-body"></tbody>
+                            </table>
+                            <div id="empty-state"
+                                class="hidden absolute inset-0 flex items-center justify-center text-gray-500 flex-col">
+                                <i class="ph-duotone ph-folder-open text-3xl mb-2"></i><span>Veri Yok</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div id="devices" class="page-content">
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
-                    <div class="glass-panel p-6 rounded-3xl relative group hover:bg-white/5 transition duration-300">
-                        <div class="flex justify-between items-start mb-6">
-                            <div
-                                class="w-12 h-12 rounded-2xl bg-neon-cyan/20 flex items-center justify-center text-neon-cyan">
-                                <i class="ph-fill ph-lamp text-2xl"></i></div>
-                            <div class="relative"><input type="checkbox" class="toggle-checkbox hidden" checked
-                                    id="d1"><label for="d1" class="toggle-label"></label></div>
-                        </div>
-                        <h4 class="font-bold text-xl">Tavan Işığı</h4>
-                        <p class="text-xs text-gray-400 mb-4">Salon</p><input type="range" value="80" class="w-full">
+            <div id="devices" class="page-content px-4 md:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <div class="glass-panel p-5 rounded-2xl">
+                        <div class="flex justify-between mb-4"><i
+                                class="ph-fill ph-lamp text-2xl text-neon-cyan"></i><input type="checkbox"
+                                class="toggle-checkbox hidden" checked id="d1"><label for="d1"
+                                class="toggle-label"></label></div>
+                        <h4 class="font-bold">Tavan Işığı</h4>
+                        <p class="text-xs text-gray-400 mb-2">Salon</p><input type="range" class="w-full" value="80">
                     </div>
-                    <div class="glass-panel p-6 rounded-3xl relative group hover:bg-white/5 transition duration-300">
-                        <div class="flex justify-between items-start mb-6">
-                            <div
-                                class="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400">
-                                <i class="ph-fill ph-fan text-2xl"></i></div>
-                            <div class="relative"><input type="checkbox" class="toggle-checkbox hidden" checked
-                                    id="d2"><label for="d2" class="toggle-label"></label></div>
-                        </div>
-                        <h4 class="font-bold text-xl">Klima</h4>
-                        <p class="text-xs text-gray-400 mb-4">Yatak Odası • 22°C</p>
+                    <div class="glass-panel p-5 rounded-2xl">
+                        <div class="flex justify-between mb-4"><i
+                                class="ph-fill ph-fan text-2xl text-blue-400"></i><input type="checkbox"
+                                class="toggle-checkbox hidden" checked id="d2"><label for="d2"
+                                class="toggle-label"></label></div>
+                        <h4 class="font-bold">Klima</h4>
+                        <p class="text-xs text-gray-400 mb-2">Yatak Odası • 22°C</p>
                         <div class="flex gap-2"><button
-                                class="flex-1 bg-white/10 rounded-lg py-2 font-bold">-</button><button
-                                class="flex-1 bg-white/10 rounded-lg py-2 font-bold">+</button></div>
+                                class="flex-1 bg-white/10 py-1 rounded text-xs font-bold">-</button><button
+                                class="flex-1 bg-white/10 py-1 rounded text-xs font-bold">+</button></div>
                     </div>
-                    <div class="glass-panel p-6 rounded-3xl relative group hover:bg-white/5 transition duration-300">
-                        <div class="flex justify-between items-start mb-6">
-                            <div
-                                class="w-12 h-12 rounded-2xl bg-orange-500/20 flex items-center justify-center text-orange-500">
-                                <i class="ph-fill ph-robot text-2xl"></i></div><span
-                                class="text-[10px] font-bold text-green-400 bg-green-400/10 px-2 py-1 rounded-lg border border-green-400/20">%85</span>
-                        </div>
-                        <h4 class="font-bold text-xl">Roborock S7</h4>
-                        <p class="text-xs text-gray-400 mb-4">Dock</p><button
-                            class="w-full py-2 bg-orange-500/90 text-black font-bold rounded-xl text-sm hover:bg-orange-400 transition">Başlat</button>
+                    <div class="glass-panel p-5 rounded-2xl">
+                        <div class="flex justify-between mb-4"><i
+                                class="ph-fill ph-robot text-2xl text-orange-500"></i><span
+                                class="text-[10px] bg-green-500/20 text-green-400 px-2 py-1 rounded">%85</span></div>
+                        <h4 class="font-bold">Robot Süpürge</h4>
+                        <p class="text-xs text-gray-400 mb-2">Dock</p><button
+                            class="w-full bg-orange-500/20 text-orange-500 py-1 rounded text-xs font-bold hover:bg-orange-500 hover:text-black transition">Başlat</button>
                     </div>
-                    <div class="glass-panel p-6 rounded-3xl relative group hover:bg-white/5 transition duration-300">
-                        <div class="flex justify-between items-start mb-6">
-                            <div
-                                class="w-12 h-12 rounded-2xl bg-purple-500/20 flex items-center justify-center text-purple-500">
-                                <i class="ph-fill ph-curtains text-2xl"></i></div>
-                            <div class="relative"><input type="checkbox" class="toggle-checkbox hidden" id="d4"><label
-                                    for="d4" class="toggle-label"></label></div>
+                    <div class="glass-panel p-5 rounded-2xl">
+                        <div class="flex justify-between mb-4"><i
+                                class="ph-fill ph-curtains text-2xl text-purple-500"></i><input type="checkbox"
+                                class="toggle-checkbox hidden" id="d4"><label for="d4" class="toggle-label"></label>
                         </div>
-                        <h4 class="font-bold text-xl">Perdeler</h4>
-                        <p class="text-xs text-gray-400 mb-4">Salon</p><input type="range" value="30" class="w-full">
+                        <h4 class="font-bold">Perdeler</h4>
+                        <p class="text-xs text-gray-400 mb-2">Salon</p><input type="range" class="w-full" value="30">
                     </div>
                     <div
-                        class="glass-panel p-6 rounded-3xl relative group hover:bg-white/5 transition duration-300 border border-neon-purple/30 shadow-[0_0_15px_rgba(189,0,255,0.1)]">
-                        <div class="flex justify-between items-start mb-6">
-                            <div
-                                class="w-12 h-12 rounded-2xl bg-neon-purple/20 flex items-center justify-center text-neon-purple">
-                                <i class="ph-fill ph-desktop-tower text-2xl"></i></div>
-                            <div class="relative"><input type="checkbox" class="toggle-checkbox hidden" checked
-                                    id="d5"><label for="d5" class="toggle-label"></label></div>
-                        </div>
-                        <h4 class="font-bold text-xl">Gaming PC</h4>
-                        <p class="text-xs text-gray-400 mb-4">Ofis</p>
-                        <div class="flex gap-2">
-                            <div class="w-5 h-5 rounded-full bg-red-500 border-2 border-white"></div>
-                            <div class="w-5 h-5 rounded-full bg-blue-500 opacity-50"></div>
+                        class="glass-panel p-5 rounded-2xl border border-neon-purple/30 shadow-[0_0_15px_rgba(189,0,255,0.1)]">
+                        <div class="flex justify-between mb-4"><i
+                                class="ph-fill ph-desktop-tower text-2xl text-neon-purple"></i><input type="checkbox"
+                                class="toggle-checkbox hidden" checked id="d5"><label for="d5"
+                                class="toggle-label"></label></div>
+                        <h4 class="font-bold">Gaming PC</h4>
+                        <p class="text-xs text-gray-400 mb-2">Ofis</p>
+                        <div class="flex gap-1">
+                            <div class="w-4 h-4 rounded-full bg-red-500 border border-white"></div>
+                            <div class="w-4 h-4 rounded-full bg-blue-500 opacity-50"></div>
                         </div>
                     </div>
-                    <div class="glass-panel p-6 rounded-3xl relative group hover:bg-white/5 transition duration-300">
-                        <div class="flex justify-between items-start mb-6">
-                            <div
-                                class="w-12 h-12 rounded-2xl bg-amber-700/20 flex items-center justify-center text-amber-500">
-                                <i class="ph-fill ph-coffee text-2xl"></i></div>
-                            <div class="relative"><input type="checkbox" class="toggle-checkbox hidden" id="d6"><label
-                                    for="d6" class="toggle-label"></label></div>
+                    <div class="glass-panel p-5 rounded-2xl">
+                        <div class="flex justify-between mb-4"><i
+                                class="ph-fill ph-coffee text-2xl text-amber-500"></i><input type="checkbox"
+                                class="toggle-checkbox hidden" id="d6"><label for="d6" class="toggle-label"></label>
                         </div>
-                        <h4 class="font-bold text-xl">Kahve Makinesi</h4>
-                        <p class="text-xs text-gray-400 mb-4">Mutfak</p><button
-                            class="w-full py-2 bg-white/5 text-gray-300 font-bold rounded-xl text-sm hover:bg-amber-600 hover:text-white transition">Hazırla</button>
+                        <h4 class="font-bold">Kahve Makinesi</h4>
+                        <p class="text-xs text-gray-400 mb-2">Mutfak</p><button
+                            class="w-full bg-amber-500/20 text-amber-500 py-1 rounded text-xs font-bold hover:bg-amber-500 hover:text-white transition">Hazırla</button>
                     </div>
-                    <div class="glass-panel p-6 rounded-3xl relative group hover:bg-white/5 transition duration-300">
-                        <div class="flex justify-between items-start mb-6">
-                            <div
-                                class="w-12 h-12 rounded-2xl bg-pink-500/20 flex items-center justify-center text-pink-500">
-                                <i class="ph-fill ph-television text-2xl"></i></div>
-                            <div class="relative"><input type="checkbox" class="toggle-checkbox hidden" id="d7"><label
-                                    for="d7" class="toggle-label"></label></div>
+                    <div class="glass-panel p-5 rounded-2xl">
+                        <div class="flex justify-between mb-4"><i
+                                class="ph-fill ph-television text-2xl text-pink-500"></i><input type="checkbox"
+                                class="toggle-checkbox hidden" id="d7"><label for="d7" class="toggle-label"></label>
                         </div>
-                        <h4 class="font-bold text-xl">Sony TV</h4>
-                        <p class="text-xs text-gray-400 mb-4">Salon</p><span
-                            class="text-[10px] uppercase tracking-wide bg-white/10 px-2 py-1 rounded">Standby</span>
+                        <h4 class="font-bold">Sony TV</h4>
+                        <p class="text-xs text-gray-400 mb-2">Salon</p><span
+                            class="text-[10px] bg-white/10 px-2 py-1 rounded text-gray-300">Standby</span>
                     </div>
                 </div>
             </div>
 
-            <div id="security" class="page-content">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div id="security" class="page-content px-4 md:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div
-                        class="glass-panel p-10 rounded-[2rem] text-center flex flex-col items-center justify-center h-[500px] relative overflow-hidden">
+                        class="flex flex-col items-center justify-center h-[400px] glass-panel rounded-[2rem] text-center relative overflow-hidden">
                         <div
-                            class="absolute w-[500px] h-[500px] radar-scan animate-radar opacity-100 bg-[conic-gradient(from_0deg,transparent_0deg,rgba(0,255,148,0.05)_60deg,rgba(0,255,148,0.3)_90deg,transparent_91deg)] rounded-full">
+                            class="absolute w-[300px] h-[300px] radar-scan animate-radar opacity-100 bg-[conic-gradient(from_0deg,transparent_0deg,rgba(0,255,148,0.05)_60deg,rgba(0,255,148,0.3)_90deg,transparent_91deg)] rounded-full">
                         </div>
-                        <div class="relative z-10 mb-8"><i class="ph-fill ph-shield-check text-8xl text-green-500"></i>
-                        </div>
-                        <h3 class="text-4xl font-bold text-white mb-2 relative z-10">Sistem Korumada</h3><button
-                            class="relative z-10 px-12 py-4 bg-white/5 border border-white/10 rounded-full font-bold hover:bg-red-500 transition flex items-center gap-3 backdrop-blur-md">Devre
+                        <i class="ph-fill ph-shield-check text-7xl text-green-500 mb-4 relative z-10"></i>
+                        <h2 class="text-3xl font-bold relative z-10">Sistem Güvende</h2>
+                        <p class="text-gray-400 mb-6 relative z-10">Tüm sensörler aktif.</p>
+                        <button
+                            class="px-10 py-3 bg-white/5 border border-white/10 rounded-full font-bold hover:bg-red-500 transition relative z-10">Devre
                             Dışı Bırak</button>
                     </div>
-                    <div class="glass-panel p-8 rounded-[2rem]">
-                        <h3 class="text-xl font-bold mb-6">Son Olaylar</h3>
-                        <div class="space-y-6">
-                            <div class="flex gap-5 relative pl-2">
+                    <div class="glass-panel p-6 rounded-[2rem]">
+                        <h3 class="font-bold text-xl mb-6">Log Kayıtları</h3>
+                        <div class="space-y-4">
+                            <div class="flex gap-4 relative pl-2">
                                 <div class="absolute left-0 top-2 bottom-0 w-0.5 bg-neon-cyan"></div><span
-                                    class="text-neon-cyan font-mono text-sm mt-0.5">14:02</span>
+                                    class="text-neon-cyan font-mono text-xs mt-1">14:02</span>
                                 <div>
-                                    <p class="font-bold text-lg">Hareket Algılandı</p>
+                                    <p class="font-bold text-sm">Hareket Algılandı</p>
+                                    <p class="text-xs text-gray-400">Arka Bahçe Kamerası</p>
                                 </div>
                             </div>
-                            <div class="flex gap-5 relative pl-2 opacity-60">
+                            <div class="flex gap-4 relative pl-2 opacity-60">
                                 <div class="absolute left-0 top-2 bottom-0 w-0.5 bg-gray-700"></div><span
-                                    class="text-gray-400 font-mono text-sm mt-0.5">12:30</span>
+                                    class="text-gray-400 font-mono text-xs mt-1">12:30</span>
                                 <div>
-                                    <p class="font-bold text-lg">Sistem Kuruldu</p>
+                                    <p class="font-bold text-sm">Giriş Yapıldı</p>
+                                    <p class="text-xs text-gray-400">Web Client</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 relative pl-2 opacity-60">
+                                <div class="absolute left-0 top-2 bottom-0 w-0.5 bg-gray-700"></div><span
+                                    class="text-gray-400 font-mono text-xs mt-1">09:00</span>
+                                <div>
+                                    <p class="font-bold text-sm">Sistem Başlatıldı</p>
+                                    <p class="text-xs text-gray-400">Otomatik</p>
                                 </div>
                             </div>
                         </div>
@@ -725,170 +711,123 @@
                 </div>
             </div>
 
-            <div id="cameras" class="page-content">
-                <div class="grid grid-cols-2 gap-6 h-[650px]">
+            <div id="cameras" class="page-content px-4 md:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div onclick="openRoomDetail('salon')"
-                        class="glass-panel p-2 rounded-3xl relative group cursor-pointer overflow-hidden hover:border-neon-cyan/50 border border-transparent transition">
-                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800"
-                            class="w-full h-full object-cover rounded-2xl opacity-70">
-                        <div
-                            class="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
-                            <h3 class="text-2xl font-bold">Salon</h3>
+                        class="glass-panel p-2 rounded-2xl h-56 relative overflow-hidden cursor-pointer group"><img
+                            src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800"
+                            class="w-full h-full object-cover rounded-xl opacity-80 group-hover:opacity-100 transition duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+                            <h3 class="text-xl font-bold">Salon</h3>
                         </div>
                     </div>
                     <div onclick="openRoomDetail('kitchen')"
-                        class="glass-panel p-2 rounded-3xl relative group cursor-pointer overflow-hidden hover:border-neon-cyan/50 border border-transparent transition">
-                        <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=800"
-                            class="w-full h-full object-cover rounded-2xl opacity-70">
-                        <div
-                            class="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
-                            <h3 class="text-2xl font-bold">Mutfak</h3>
+                        class="glass-panel p-2 rounded-2xl h-56 relative overflow-hidden cursor-pointer group"><img
+                            src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=800"
+                            class="w-full h-full object-cover rounded-xl opacity-80 group-hover:opacity-100 transition duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+                            <h3 class="text-xl font-bold">Mutfak</h3>
                         </div>
                     </div>
                     <div onclick="openRoomDetail('garden')"
-                        class="glass-panel p-2 rounded-3xl relative group cursor-pointer overflow-hidden hover:border-neon-green/50 border border-transparent transition">
-                        <img src="https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?q=80&w=800"
-                            class="w-full h-full object-cover rounded-2xl opacity-50 grayscale contrast-125">
-                        <div class="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black/90 to-transparent">
-                            <h3 class="text-2xl font-bold text-green-400">Bahçe (IR)</h3>
+                        class="glass-panel p-2 rounded-2xl h-56 relative overflow-hidden cursor-pointer group"><img
+                            src="https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?q=80&w=800"
+                            class="w-full h-full object-cover rounded-xl opacity-60 grayscale contrast-125 group-hover:opacity-80 transition duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+                            <h3 class="text-xl font-bold text-green-400">Bahçe (IR)</h3>
                         </div>
                     </div>
                     <div onclick="openRoomDetail('entrance')"
-                        class="glass-panel p-2 rounded-3xl relative group cursor-pointer overflow-hidden hover:border-neon-cyan/50 border border-transparent transition">
-                        <img src="https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?q=80&w=800"
-                            class="w-full h-full object-cover rounded-2xl opacity-70">
-                        <div class="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black/90 to-transparent">
-                            <h3 class="text-2xl font-bold">Giriş Kapısı</h3>
+                        class="glass-panel p-2 rounded-2xl h-56 relative overflow-hidden cursor-pointer group"><img
+                            src="https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?q=80&w=800"
+                            class="w-full h-full object-cover rounded-xl opacity-80 group-hover:opacity-100 transition duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+                            <h3 class="text-xl font-bold">Giriş</h3>
                         </div>
                     </div>
                 </div>
             </div>
 
-        </main>
-    </div>
+        </div>
+    </main>
 
     <div id="camera-selector-modal"
-        class="modal-overlay fixed inset-0 z-[200] bg-black/80 backdrop-blur-md items-center justify-center p-8">
-        <div
-            class="glass-panel w-full max-w-5xl p-10 rounded-[2.5rem] relative animate-zoom-in border border-white/10 shadow-2xl">
-            <button onclick="closeModal('camera-selector-modal')"
-                class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 hover:bg-red-500 hover:text-white flex items-center justify-center transition text-xl cursor-pointer"><i
+        class="modal-overlay fixed inset-0 z-[200] bg-black/90 backdrop-blur-md items-center justify-center p-4 hidden">
+        <div class="glass-panel w-full max-w-4xl p-6 rounded-3xl relative animate-zoom-in"><button
+                onclick="closeModal('camera-selector-modal')" class="absolute top-4 right-4 text-2xl"><i
                     class="ph-bold ph-x"></i></button>
-            <h2 class="text-3xl font-bold mb-2">Hızlı Kamera Seçimi</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-                <div onclick="openRoomDetail('salon'); closeModal('camera-selector-modal')"
-                    class="cursor-pointer rounded-3xl overflow-hidden h-48 border-2 border-transparent hover:border-neon-cyan relative group">
-                    <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=400"
-                        class="w-full h-full object-cover opacity-70 group-hover:opacity-100">
-                    <div class="absolute bottom-0 p-4 bg-black/70 w-full">Salon</div>
-                </div>
-                <div onclick="openRoomDetail('kitchen'); closeModal('camera-selector-modal')"
-                    class="cursor-pointer rounded-3xl overflow-hidden h-48 border-2 border-transparent hover:border-neon-cyan relative group">
-                    <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=400"
-                        class="w-full h-full object-cover opacity-70 group-hover:opacity-100">
-                    <div class="absolute bottom-0 p-4 bg-black/70 w-full">Mutfak</div>
-                </div>
-                <div onclick="openRoomDetail('garden'); closeModal('camera-selector-modal')"
-                    class="cursor-pointer rounded-3xl overflow-hidden h-48 border-2 border-transparent hover:border-neon-green relative group">
-                    <img src="https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?q=80&w=400"
-                        class="w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100">
-                    <div class="absolute bottom-0 p-4 bg-black/70 w-full text-green-400">Bahçe</div>
-                </div>
-                <div onclick="openRoomDetail('entrance'); closeModal('camera-selector-modal')"
-                    class="cursor-pointer rounded-3xl overflow-hidden h-48 border-2 border-transparent hover:border-neon-cyan relative group">
-                    <img src="https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?q=80&w=400"
-                        class="w-full h-full object-cover opacity-70 group-hover:opacity-100">
-                    <div class="absolute bottom-0 p-4 bg-black/70 w-full">Giriş</div>
-                </div>
+            <h2 class="text-2xl font-bold mb-4">Kamera Seçimi</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div onclick="openRoomDetail('salon')"
+                    class="aspect-video bg-black rounded-xl overflow-hidden relative cursor-pointer"><img
+                        src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=400"
+                        class="w-full h-full object-cover opacity-70 hover:opacity-100 transition"><span
+                        class="absolute bottom-2 left-2 text-xs font-bold">Salon</span></div>
+                <div onclick="openRoomDetail('kitchen')"
+                    class="aspect-video bg-black rounded-xl overflow-hidden relative cursor-pointer"><img
+                        src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=400"
+                        class="w-full h-full object-cover opacity-70 hover:opacity-100 transition"><span
+                        class="absolute bottom-2 left-2 text-xs font-bold">Mutfak</span></div>
             </div>
         </div>
     </div>
     <div id="room-detail-modal"
-        class="modal-overlay fixed inset-0 z-[210] bg-black/90 backdrop-blur-xl items-center justify-center p-4 md:p-10">
+        class="modal-overlay fixed inset-0 z-[210] bg-black/90 backdrop-blur-md items-center justify-center p-2 hidden">
         <div
-            class="glass-panel w-full h-full max-w-6xl rounded-[2.5rem] flex flex-col relative animate-zoom-in overflow-hidden border border-white/10 shadow-2xl">
-            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-black/20">
-                <div>
-                    <h2 class="text-2xl font-bold" id="modal-room-name">Oda</h2>
-                    <p class="text-sm text-gray-400 flex items-center gap-2"><span
-                            class="w-2 h-2 bg-red-600 rounded-full animate-pulse"></span> Canlı Yayın</p>
-                </div><button onclick="closeModal('room-detail-modal')"
-                    class="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition cursor-pointer"><i
-                        class="ph-bold ph-x text-xl"></i></button>
+            class="glass-panel w-full h-full md:h-auto md:aspect-video max-w-6xl rounded-3xl flex flex-col relative animate-zoom-in overflow-hidden">
+            <div class="p-4 flex justify-between items-center bg-black/40">
+                <h2 class="font-bold" id="modal-room-name">Kamera</h2><button
+                    onclick="closeModal('room-detail-modal')"><i class="ph-bold ph-x text-2xl"></i></button>
             </div>
-            <div class="flex-1 bg-black relative flex items-center justify-center"><img id="main-cam-view" src=""
-                    class="w-full h-full object-cover">
-                <div
-                    class="absolute top-6 left-6 bg-black/60 backdrop-blur-md px-4 py-1.5 rounded-lg text-sm font-mono border border-white/10 text-neon-cyan shadow-lg">
-                    LIVE FEED • 4K</div>
+            <div class="flex-1 bg-black flex items-center justify-center relative"><img id="main-cam-view" src=""
+                    class="w-full h-full object-contain">
+                <div class="absolute top-4 left-4 bg-red-600 px-2 py-1 rounded text-[10px] font-bold animate-pulse">LIVE
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            setInterval(() => { const el = document.getElementById('clock'); if (el) el.innerText = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }); }, 1000);
-            const passInput = document.getElementById('passcode');
-            if (passInput) { passInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin() }); passInput.focus(); }
-        });
-
-        function attemptLogin() {
-            const c = document.getElementById('passcode').value;
-            if (c === '1234') {
-                document.getElementById('login-screen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('app-container').classList.remove('opacity-0', 'blur-md', 'pointer-events-none');
-                    document.getElementById('app-container').classList.add('animate-fade-in');
-                    initDB(); initChart(); switchPage('dashboard');
-                }, 700);
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
+        // CORE
+        function attemptLogin() { const c = document.getElementById('passcode').value; if (c === '1234') { document.getElementById('login-screen').style.opacity = '0'; setTimeout(() => { document.getElementById('login-screen').style.display = 'none'; initDB(); initChart(); switchPage('dashboard'); }, 700); } else { document.getElementById('login-error').classList.remove('hidden'); } }
+        document.getElementById('passcode').addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin() });
 
         function switchPage(id) {
             document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById(id);
-            if (target) target.classList.add('active');
-            if (window.innerWidth < 768) { const sb = document.getElementById('sidebar'); if (!sb.classList.contains('-translate-x-full')) toggleSidebar(); }
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = 'nav-btn w-full flex items-center gap-4 p-4 rounded-2xl text-gray-400 hover:bg-white/5 transition-all border-l-4 border-transparent cursor-pointer';
-                const i = btn.querySelector('i'); if (i) i.className = i.className.replace('text-neon-cyan', '');
-            });
-            const active = document.getElementById('nav-' + id);
-            if (active) active.className = 'nav-btn w-full flex items-center gap-4 p-4 rounded-2xl transition-all bg-gradient-to-r from-neon-cyan/10 to-transparent border-l-4 border-neon-cyan text-neon-cyan cursor-pointer';
+            document.getElementById(id).classList.add('active');
+            if (window.innerWidth < 768) { document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('sidebar-overlay').classList.add('hidden'); }
+            document.querySelectorAll('.nav-btn').forEach(btn => { btn.classList.remove('text-neon-cyan', 'bg-gradient-to-r', 'from-neon-cyan/10', 'border-neon-cyan'); btn.classList.add('text-gray-400', 'border-transparent'); });
+            const activeBtn = document.getElementById('nav-' + id); if (activeBtn) { activeBtn.classList.add('text-neon-cyan', 'bg-gradient-to-r', 'from-neon-cyan/10', 'border-neon-cyan'); activeBtn.classList.remove('text-gray-400', 'border-transparent'); }
         }
-
-        function toggleSidebar() { const sb = document.getElementById('sidebar'); sb.classList.toggle('-translate-x-full'); }
-        function toggleNotifications(e) { e.stopPropagation(); document.getElementById('notification-panel').classList.toggle('hidden'); }
-        function closeNotificationsOutside(e) { const p = document.getElementById('notification-panel'); if (p && !p.classList.contains('hidden')) p.classList.add('hidden'); }
+        function toggleSidebar() { const sb = document.getElementById('sidebar'); const ov = document.getElementById('sidebar-overlay'); sb.classList.toggle('-translate-x-full'); ov.classList.toggle('hidden'); }
         function saveDynamicProfile(btn) {
-            const name = document.getElementById('p-name').value; const surname = document.getElementById('p-surname').value; const role = document.getElementById('p-role').value;
-            document.getElementById('sidebar-name').innerText = `${name} ${surname[0]}.`; document.getElementById('sidebar-role').innerText = role; document.getElementById('profile-name-display').innerText = `${name} ${surname}`; document.getElementById('profile-role-display').innerText = role;
-            const t = btn.innerHTML; btn.innerHTML = '<i class="ph-bold ph-check"></i> Kaydedildi!'; btn.classList.add('bg-green-500', 'text-white'); btn.classList.remove('bg-neon-cyan', 'text-black');
-            setTimeout(() => { btn.innerHTML = t; btn.classList.remove('bg-green-500', 'text-white'); btn.classList.add('bg-neon-cyan', 'text-black'); }, 2000);
+            const n = document.getElementById('p-name').value, s = document.getElementById('p-surname').value, r = document.getElementById('p-role').value;
+            document.getElementById('sidebar-name').innerText = `${n} ${s[0]}.`; document.getElementById('profile-name-display').innerText = `${n} ${s}`; document.getElementById('profile-role-display').innerText = r; document.getElementById('sidebar-role').innerText = r;
+            const og = btn.innerHTML; btn.innerHTML = '<i class="ph-bold ph-check"></i> Kaydedildi'; btn.classList.add('bg-green-500', 'text-white'); btn.classList.remove('bg-neon-cyan', 'text-black'); setTimeout(() => { btn.innerHTML = og; btn.classList.remove('bg-green-500', 'text-white'); btn.classList.add('bg-neon-cyan', 'text-black'); }, 2000);
         }
 
-        function openCameraSelector() { document.getElementById('camera-selector-modal').classList.add('open'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-        const roomData = { 'salon': { name: 'Salon', img: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1200' }, 'kitchen': { name: 'Mutfak', img: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=1200' }, 'garden': { name: 'Bahçe (IR)', img: 'https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?q=80&w=1200' }, 'entrance': { name: 'Giriş Kapısı', img: 'https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?q=80&w=1200' } };
-        function openRoomDetail(k) { const d = roomData[k]; document.getElementById('modal-room-name').innerText = d.name; document.getElementById('main-cam-view').src = d.img; document.getElementById('room-detail-modal').classList.add('open'); }
-
-        const schemas = { users: { id: 'ID', name: 'Ad', surname: 'Soyad', status: 'Durum', email: 'E-Posta' }, houses: { id: 'ID', address: 'Adres', ownerId: 'Sahip ID', type: 'Konut Tipi' }, devices: { id: 'ID', name: 'Cihaz Adı', type: 'Tür', roomId: 'Oda ID', status: 'Durum' }, events: { id: 'Log ID', date: 'Tarih', event: 'Olay', source: 'Kaynak' } };
-        const db = { users: [{ id: 1, name: 'Thomas', surname: 'Anderson', status: 'Aktif', email: 'thomas@shome.com' }, { id: 2, name: 'Neo', surname: 'One', status: 'Pasif', email: 'neo@matrix.com' }, { id: 3, name: 'Trinity', surname: 'Moss', status: 'Aktif', email: 'trinity@shome.com' }], houses: [{ id: 101, address: 'İzmir, Karşıyaka No:5', ownerId: 1, type: 'Villa' }, { id: 102, address: 'İstanbul, Beşiktaş No:9', ownerId: 3, type: 'Daire' }], devices: [{ id: 501, name: 'Ana Kamera', type: 'Kamera', roomId: 10, status: 'ON' }, { id: 502, name: 'Mutfak Sensör', type: 'Sensör', roomId: 11, status: 'ON' }, { id: 503, name: 'Bahçe Işık', type: 'Lamba', roomId: 12, status: 'OFF' }, { id: 504, name: 'Klima', type: 'Klima', roomId: 10, status: 'OFF' }], events: [{ id: 9001, date: '2025-11-20 14:02', event: 'Hareket Algılandı', source: 'CAM-03' }, { id: 9002, date: '2025-11-20 12:30', event: 'Login Başarılı', source: 'WebClient' }] };
-        let currentTable = 'users'; let editMode = false; let editId = null;
+        // DB
+        const schemas = { users: { id: 'ID', name: 'Ad', surname: 'Soyad', status: 'Durum', email: 'E-Posta' }, houses: { id: 'ID', address: 'Adres', ownerId: 'Sahip', type: 'Tip' }, devices: { id: 'ID', name: 'Cihaz', type: 'Tip', roomId: 'Oda', status: 'Durum' }, events: { id: 'ID', date: 'Zaman', event: 'Olay', source: 'Kaynak' } };
+        const db = { users: [{ id: 1, name: 'Thomas', surname: 'Anderson', status: 'Aktif', email: 'thomas@shome.com' }, { id: 2, name: 'Neo', surname: 'One', status: 'Pasif', email: 'neo@matrix.com' }], houses: [{ id: 101, address: 'İzmir No:5', ownerId: 1, type: 'Villa' }], devices: [{ id: 501, name: 'Kamera', type: 'Cam', roomId: 10, status: 'ON' }, { id: 502, name: 'Lamba', type: 'Light', roomId: 11, status: 'OFF' }], events: [{ id: 901, date: '14:02', event: 'Hareket', source: 'Cam-1' }] };
+        let currentTable = 'users', editMode = false, editId = null;
         function initDB() { updateStats(); changeTable(); }
-        function changeTable() { const s = document.getElementById('table-selector'); if (s) { currentTable = s.value; clearForm(); renderFormInputs(); renderTableData(); } }
-        function updateStats() { if (document.getElementById('stat-users')) { document.getElementById('stat-users').innerText = db.users.length; document.getElementById('stat-houses').innerText = db.houses.length; document.getElementById('stat-devices').innerText = db.devices.length; document.getElementById('stat-events').innerText = db.events.length; } }
-        function renderFormInputs() { const c = document.getElementById('dynamic-form'); if (!c) return; c.innerHTML = ''; Object.keys(schemas[currentTable]).forEach(key => { if (key === 'id') return; c.innerHTML += `<div class="space-y-1"><label class="text-xs text-gray-400 uppercase font-bold ml-1">${schemas[currentTable][key]}</label><input type="text" id="input-${key}" class="db-input" placeholder="${schemas[currentTable][key]} giriniz..."></div>`; }); }
-        function renderTableData() { const tb = document.getElementById('db-table-body'); const th = document.getElementById('db-table-head'); const d = db[currentTable]; if (!tb || !th) return; th.innerHTML = ''; Object.values(schemas[currentTable]).forEach(l => th.innerHTML += `<th>${l}</th>`); th.innerHTML += `<th class="text-right">İŞLEMLER</th>`; tb.innerHTML = ''; if (d.length === 0) { document.getElementById('empty-state').classList.remove('hidden'); return; } else { document.getElementById('empty-state').classList.add('hidden'); } d.forEach(row => { let tr = `<tr class="border-b border-white/5 hover:bg-white/5 transition">`; Object.keys(schemas[currentTable]).forEach(k => tr += `<td>${row[k]}</td>`); tr += `<td class="text-right flex justify-end gap-2 py-3"><button onclick="editRow(${row.id})" class="w-8 h-8 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition flex items-center justify-center cursor-pointer"><i class="ph-bold ph-pencil-simple"></i></button><button onclick="deleteRow(${row.id})" class="w-8 h-8 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition flex items-center justify-center cursor-pointer"><i class="ph-bold ph-trash"></i></button></td></tr>`; tb.innerHTML += tr; }); }
-        function saveData() { const keys = Object.keys(schemas[currentTable]).filter(k => k !== 'id'); let newObj = {}; let isEmpty = false; keys.forEach(k => { const v = document.getElementById(`input-${k}`).value; if (!v) isEmpty = true; newObj[k] = v; }); if (isEmpty) { alert("Lütfen tüm alanları doldurun!"); return; } if (editMode) { const idx = db[currentTable].findIndex(x => x.id === editId); newObj.id = editId; db[currentTable][idx] = newObj; } else { const nId = db[currentTable].length > 0 ? Math.max(...db[currentTable].map(o => o.id)) + 1 : 1; newObj.id = nId; db[currentTable].push(newObj); } clearForm(); renderTableData(); updateStats(); }
-        function deleteRow(id) { if (confirm("Silmek istediğinize emin misiniz?")) { db[currentTable] = db[currentTable].filter(x => x.id !== id); renderTableData(); updateStats(); if (editMode && editId === id) clearForm(); } }
-        function editRow(id) { const item = db[currentTable].find(x => x.id === id); Object.keys(schemas[currentTable]).forEach(k => { if (k !== 'id') document.getElementById(`input-${k}`).value = item[k]; }); editMode = true; editId = id; document.getElementById('form-title').innerText = `Kayıt Düzenleniyor (ID: ${id})`; document.getElementById('form-mode-badge').innerText = "UPDATE MODE"; document.getElementById('form-mode-badge').className = "text-[10px] bg-neon-purple text-white px-2 py-1 rounded"; const btn = document.getElementById('save-btn'); btn.innerText = "Güncelle"; btn.className = "px-6 py-2 bg-neon-purple hover:bg-purple-400 text-white rounded-lg text-sm font-bold transition shadow-[0_0_10px_rgba(189,0,255,0.4)] cursor-pointer"; }
-        function clearForm() { document.querySelectorAll('.db-input').forEach(i => i.value = ''); editMode = false; editId = null; document.getElementById('form-title').innerText = "Yeni Kayıt Ekle"; document.getElementById('form-mode-badge').innerText = "INSERT MODE"; document.getElementById('form-mode-badge').className = "text-[10px] bg-neon-cyan text-black px-2 py-1 rounded"; const btn = document.getElementById('save-btn'); btn.innerText = "Ekle"; btn.className = "px-6 py-2 bg-neon-cyan hover:bg-cyan-400 text-black rounded-lg text-sm font-bold transition shadow-[0_0_10px_rgba(0,210,255,0.4)] cursor-pointer"; }
+        function changeTable() { currentTable = document.getElementById('table-selector').value; renderForm(); renderTable(); }
+        function updateStats() { document.getElementById('stat-users').innerText = db.users.length; document.getElementById('stat-houses').innerText = db.houses.length; document.getElementById('stat-devices').innerText = db.devices.length; document.getElementById('stat-events').innerText = db.events.length; }
+        function renderForm() { const c = document.getElementById('dynamic-form'); c.innerHTML = ''; Object.keys(schemas[currentTable]).forEach(k => { if (k !== 'id') c.innerHTML += `<div><label class="text-[10px] uppercase text-gray-400">${schemas[currentTable][k]}</label><input type="text" id="input-${k}" class="db-input"></div>` }); }
+        function renderTable() { const th = document.getElementById('db-table-head'); const tb = document.getElementById('db-table-body'); const data = db[currentTable]; th.innerHTML = ''; Object.values(schemas[currentTable]).forEach(v => th.innerHTML += `<th>${v}</th>`); th.innerHTML += '<th class="text-right">#</th>'; tb.innerHTML = ''; if (data.length === 0) document.getElementById('empty-state').classList.remove('hidden'); else document.getElementById('empty-state').classList.add('hidden'); data.forEach(row => { let tr = '<tr>'; Object.keys(schemas[currentTable]).forEach(k => tr += `<td>${row[k]}</td>`); tr += `<td class="text-right"><button onclick="editRow(${row.id})" class="text-blue-400 mr-2"><i class="ph-bold ph-pencil-simple"></i></button><button onclick="deleteRow(${row.id})" class="text-red-400"><i class="ph-bold ph-trash"></i></button></td></tr>`; tb.innerHTML += tr; }); }
+        function saveData() { const keys = Object.keys(schemas[currentTable]).filter(k => k !== 'id'); let obj = {}; keys.forEach(k => obj[k] = document.getElementById(`input-${k}`).value); if (editMode) { const idx = db[currentTable].findIndex(x => x.id === editId); obj.id = editId; db[currentTable][idx] = obj; } else { obj.id = Date.now(); db[currentTable].push(obj); } clearForm(); renderTable(); updateStats(); }
+        function deleteRow(id) { db[currentTable] = db[currentTable].filter(x => x.id !== id); renderTable(); updateStats(); }
+        function editRow(id) { const item = db[currentTable].find(x => x.id === id); Object.keys(item).forEach(k => { if (k !== 'id') document.getElementById(`input-${k}`).value = item[k] }); editMode = true; editId = id; document.getElementById('form-title').innerText = 'Düzenle'; document.getElementById('save-btn').innerText = 'Güncelle'; }
+        function clearForm() { document.querySelectorAll('.db-input').forEach(i => i.value = ''); editMode = false; document.getElementById('form-title').innerText = 'Yeni Ekle'; document.getElementById('save-btn').innerText = 'Ekle'; }
 
-        function initChart() { const c = document.getElementById('energyChart'); if (!c) return; const ctx = c.getContext('2d'); const g = ctx.createLinearGradient(0, 0, 0, 400); g.addColorStop(0, 'rgba(0, 210, 255, 0.5)'); g.addColorStop(1, 'rgba(0, 210, 255, 0)'); new Chart(ctx, { type: 'line', data: { labels: ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'], datasets: [{ label: 'kWh', data: [12, 14, 11, 15, 13, 18, 16], borderColor: '#00D2FF', backgroundColor: g, borderWidth: 4, tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } } }); }
+        // --- EXTRAS ---
+        function toggleNotifications(e) { e.stopPropagation(); document.getElementById('notification-panel').classList.toggle('hidden'); }
+        document.onclick = function (e) { if (!e.target.closest('#notification-panel') && !e.target.closest('button')) document.getElementById('notification-panel').classList.add('hidden'); }
+        function openCameraSelector() { document.getElementById('camera-selector-modal').classList.remove('hidden'); document.getElementById('camera-selector-modal').classList.add('flex'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
+        function openRoomDetail(k) { const imgs = { 'salon': 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6', 'kitchen': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f', 'garden': 'https://images.unsplash.com/photo-1628744448840-55bdb2497bd4', 'entrance': 'https://images.unsplash.com/photo-1516455590571-18256e5bb9ff' }; document.getElementById('modal-room-name').innerText = k.toUpperCase(); document.getElementById('main-cam-view').src = imgs[k] + '?q=80&w=1200'; document.getElementById('room-detail-modal').classList.remove('hidden'); document.getElementById('room-detail-modal').classList.add('flex'); }
+        function initChart() { const ctx = document.getElementById('energyChart').getContext('2d'); new Chart(ctx, { type: 'line', data: { labels: ['P', 'S', 'Ç', 'P', 'C', 'C', 'P'], datasets: [{ label: 'kWh', data: [12, 14, 11, 15, 13, 18, 16], borderColor: '#00D2FF', tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } } }); }
+        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }), 1000);
     </script>
 </body>
 
