@@ -1,0 +1,181 @@
+/* S-Home v12.0 - Stil Dosyası */
+
+/* Temel Ayarlar */
+body {
+    overflow: hidden;
+}
+
+/* Glassmorphism Panel Tasarımı */
+.glass-panel {
+    background: rgba(21, 22, 28, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Sayfa Geçiş Mantığı */
+.page-content {
+    display: none;
+    height: 100%;
+    overflow-y: auto;
+    padding-bottom: 100px;
+}
+
+.page-content.active {
+    display: block;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Özel Scrollbar Tasarımı */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0B0C10;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+/* Veritabanı Tablo Tasarımı */
+.db-table th {
+    text-align: left;
+    padding: 12px;
+    color: #00D2FF;
+    font-size: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.db-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.9rem;
+    color: #ccc;
+    vertical-align: middle;
+}
+
+.db-table tr:hover td {
+    background: rgba(255, 255, 255, 0.03);
+    color: white;
+}
+
+/* Form Input Tasarımı */
+.db-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: white;
+    outline: none;
+    transition: 0.3s;
+}
+
+.db-input:focus {
+    border-color: #00D2FF;
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.15);
+    background: rgba(0, 0, 0, 0.6);
+}
+
+/* Toggle Switch (Anahtar) Tasarımı */
+.toggle-checkbox:checked {
+    right: 0;
+    border-color: #00D2FF;
+}
+
+.toggle-checkbox:checked+.toggle-label {
+    background-color: rgba(0, 210, 255, 0.2);
+}
+
+.toggle-checkbox:checked+.toggle-label:before {
+    transform: translateX(100%);
+    background-color: #00D2FF;
+    box-shadow: 0 0 10px #00D2FF;
+}
+
+.toggle-label {
+    width: 44px;
+    height: 22px;
+    position: relative;
+    display: block;
+    background: #333;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.toggle-label:before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+/* Slider (Range) Tasarımı */
+input[type=range] {
+    -webkit-appearance: none;
+    background: transparent;
+    width: 100%;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    margin-top: -6px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    display: none;
+}
+
+.modal-overlay.open {
+    display: flex;
+    animation: zoomIn 0.3s ease-out;
+}
+
+/* ... Önceki kodların altına ekle ... */
+
+/* ACİL DÜZELTME: Login Ekranı Zorla Aktif */
+#login-screen {
+    pointer-events: auto !important;
+    /* Tıklamayı zorla aç */
+    z-index: 9999 !important;
+    /* En üste zorla al */
+}
+
+#app-container {
+    z-index: 1;
+    /* Login'in altında kalmasını garantile */
+}
+
+/* Butonların mobilde daha rahat tıklanması için */
+button,
+.cursor-pointer {
+    cursor: pointer !important;
+    touch-action: manipulation;
+}
