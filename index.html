@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>S-Home v14.0 Premium</title>
+    <title>S-Home v15.0 Premium</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -248,10 +248,11 @@
         <div class="p-6 flex items-center gap-4 border-b border-white/5">
             <div
                 class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-cyan to-blue-600 flex items-center justify-center shadow-lg">
-                <i class="ph-fill ph-house-line text-white text-xl"></i></div>
+                <i class="ph-fill ph-house-line text-white text-xl"></i>
+            </div>
             <div>
                 <h1 class="text-xl font-bold tracking-wide">S-Home</h1>
-                <div class="flex items-center gap-1 text-[10px] text-gray-500"><span
+                <div class="flex items-center gap-1 text-[10px] text-gray-500"><span id="security-status-dot"
                         class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Online</div>
             </div>
             <button onclick="toggleSidebar()" class="md:hidden ml-auto text-gray-400 hover:text-white"><i
@@ -274,6 +275,10 @@
                     class="ph ph-devices text-lg"></i> <span class="text-sm font-medium">Cihazlar</span></button>
             <div class="my-4 border-t border-white/5"></div>
             <p class="text-[10px] text-gray-500 font-bold uppercase pl-4 mb-2">Yönetim</p>
+            <button onclick="switchPage('analytics')" id="nav-analytics"
+                class="nav-btn w-full flex items-center gap-4 p-3 rounded-xl text-gray-400 hover:bg-white/5"><i
+                    class="ph ph-chart-pie-slice text-lg"></i> <span
+                    class="text-sm font-medium">Analitik</span></button>
             <button onclick="switchPage('db-panel')" id="nav-db-panel"
                 class="nav-btn w-full flex items-center gap-4 p-3 rounded-xl text-gray-400 hover:bg-white/5"><i
                     class="ph-fill ph-database text-lg"></i> <span
@@ -317,7 +322,7 @@
             <div class="flex items-center gap-4">
                 <div class="text-right hidden sm:block">
                     <div id="clock" class="text-xl font-mono font-bold text-neon-cyan">--:--</div>
-                    <div class="text-[10px] text-gray-500">20.11.2025</div>
+                    <div id="header-date" class="text-[10px] text-gray-500"></div>
                 </div>
                 <div class="relative">
                     <button onclick="toggleNotifications(event)"
@@ -351,7 +356,7 @@
                             </div>
                             <div class="relative z-10">
                                 <p class="text-gray-400 text-xs uppercase tracking-wider">Ortam</p>
-                                <h3 class="text-4xl font-bold mt-1">24°C</h3>
+                                <h3 id="temperature-display" class="text-4xl font-bold mt-1">24°C</h3>
                             </div>
                             <i class="ph-fill ph-thermometer text-4xl text-neon-cyan relative z-10"></i>
                         </div>
@@ -395,7 +400,8 @@
                                 class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 bg-black/40 backdrop-blur-[2px]">
                                 <div
                                     class="bg-neon-cyan text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition shadow-[0_0_20px_rgba(0,210,255,0.6)]">
-                                    <i class="ph-bold ph-corners-out text-lg"></i> Genişlet</div>
+                                    <i class="ph-bold ph-corners-out text-lg"></i> Genişlet
+                                </div>
                             </div>
                             <div class="absolute bottom-4 left-4 z-10">
                                 <p class="font-bold text-lg">Salon</p>
@@ -405,6 +411,13 @@
                                 class="absolute top-4 left-4 bg-red-600 px-2 py-1 rounded text-[10px] font-bold animate-pulse">
                                 LIVE</div>
                         </div>
+                    </div>
+
+                    <!-- Son Olaylar Widget -->
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><i
+                                class="ph-fill ph-clock-counter-clockwise text-neon-purple"></i> Son Olaylar</h3>
+                        <div id="recent-events" class="space-y-4"></div>
                     </div>
                 </div>
             </div>
@@ -419,7 +432,8 @@
                                 class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-neon-cyan shadow-[0_0_30px_rgba(0,210,255,0.3)] group-hover:opacity-80 transition">
                             <div
                                 class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                                <i class="ph-bold ph-camera text-4xl text-white drop-shadow-md"></i></div>
+                                <i class="ph-bold ph-camera text-4xl text-white drop-shadow-md"></i>
+                            </div>
                             <div
                                 class="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-4 border-[#15161C]">
                             </div>
@@ -474,8 +488,8 @@
                                     <div class="flex items-center gap-4">
                                         <div
                                             class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-110 transition">
-                                            <i class="ph-fill ph-bell text-xl"></i></div><span
-                                            class="font-medium">Bildirimler</span>
+                                            <i class="ph-fill ph-bell text-xl"></i>
+                                        </div><span class="font-medium">Bildirimler</span>
                                     </div>
                                     <div class="relative"><input type="checkbox" class="toggle-checkbox hidden" checked
                                             id="s1"><label for="s1" class="toggle-label"></label></div>
@@ -485,7 +499,8 @@
                                     <div class="flex items-center gap-4">
                                         <div
                                             class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition">
-                                            <i class="ph-fill ph-moon text-xl"></i></div><span class="font-medium">Gece
+                                            <i class="ph-fill ph-moon text-xl"></i>
+                                        </div><span class="font-medium">Gece
                                             Modu</span>
                                     </div>
                                     <div class="relative"><input type="checkbox" class="toggle-checkbox hidden" checked
@@ -496,8 +511,8 @@
                                     <div class="flex items-center gap-4">
                                         <div
                                             class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 group-hover:scale-110 transition">
-                                            <i class="ph-fill ph-shield-check text-xl"></i></div><span
-                                            class="font-medium">2FA Güvenlik</span>
+                                            <i class="ph-fill ph-shield-check text-xl"></i>
+                                        </div><span class="font-medium">2FA Güvenlik</span>
                                     </div>
                                     <div class="relative"><input type="checkbox" class="toggle-checkbox hidden"
                                             id="s3"><label for="s3" class="toggle-label"></label></div>
@@ -588,7 +603,8 @@
                             </table>
                             <div id="empty-state"
                                 class="hidden absolute inset-0 flex items-center justify-center text-gray-500 flex-col">
-                                <i class="ph-duotone ph-folder-open text-3xl mb-2"></i><span>Veri Yok</span></div>
+                                <i class="ph-duotone ph-folder-open text-3xl mb-2"></i><span>Veri Yok</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -596,47 +612,52 @@
 
             <div id="devices" class="page-content px-4 md:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-                    <div class="glass-panel p-5 rounded-2xl">
+                    <div class="glass-panel p-5 rounded-2xl hover:-translate-y-1 transition duration-300">
                         <div class="flex justify-between mb-4"><i
                                 class="ph-fill ph-lamp text-2xl text-neon-cyan"></i><input type="checkbox"
-                                class="toggle-checkbox hidden" checked id="d1"><label for="d1"
+                                class="toggle-checkbox hidden" checked id="d1"
+                                onchange="toggleDevice('d1','Tavan Işığı')"><label for="d1"
                                 class="toggle-label"></label></div>
                         <h4 class="font-bold">Tavan Işığı</h4>
                         <p class="text-xs text-gray-400 mb-2">Salon</p><input type="range" class="w-full" value="80">
                     </div>
-                    <div class="glass-panel p-5 rounded-2xl">
+                    <div class="glass-panel p-5 rounded-2xl hover:-translate-y-1 transition duration-300">
                         <div class="flex justify-between mb-4"><i
                                 class="ph-fill ph-fan text-2xl text-blue-400"></i><input type="checkbox"
-                                class="toggle-checkbox hidden" checked id="d2"><label for="d2"
-                                class="toggle-label"></label></div>
+                                class="toggle-checkbox hidden" checked id="d2"
+                                onchange="toggleDevice('d2','Klima')"><label for="d2" class="toggle-label"></label>
+                        </div>
                         <h4 class="font-bold">Klima</h4>
                         <p class="text-xs text-gray-400 mb-2">Yatak Odası • 22°C</p>
                         <div class="flex gap-2"><button
                                 class="flex-1 bg-white/10 py-1 rounded text-xs font-bold">-</button><button
                                 class="flex-1 bg-white/10 py-1 rounded text-xs font-bold">+</button></div>
                     </div>
-                    <div class="glass-panel p-5 rounded-2xl">
+                    <div class="glass-panel p-5 rounded-2xl hover:-translate-y-1 transition duration-300">
                         <div class="flex justify-between mb-4"><i
                                 class="ph-fill ph-robot text-2xl text-orange-500"></i><span
                                 class="text-[10px] bg-green-500/20 text-green-400 px-2 py-1 rounded">%85</span></div>
                         <h4 class="font-bold">Robot Süpürge</h4>
                         <p class="text-xs text-gray-400 mb-2">Dock</p><button
-                            class="w-full bg-orange-500/20 text-orange-500 py-1 rounded text-xs font-bold hover:bg-orange-500 hover:text-black transition">Başlat</button>
+                            onclick="addEvent('Robot Süpürge Başlatıldı','Cihaz Paneli');showToast('Robot Süpürge başlatıldı!','success')"
+                            class="w-full bg-orange-500/20 text-orange-500 py-1 rounded text-xs font-bold hover:bg-orange-500 hover:text-black transition cursor-pointer">Başlat</button>
                     </div>
-                    <div class="glass-panel p-5 rounded-2xl">
+                    <div class="glass-panel p-5 rounded-2xl hover:-translate-y-1 transition duration-300">
                         <div class="flex justify-between mb-4"><i
                                 class="ph-fill ph-curtains text-2xl text-purple-500"></i><input type="checkbox"
-                                class="toggle-checkbox hidden" id="d4"><label for="d4" class="toggle-label"></label>
+                                class="toggle-checkbox hidden" id="d4" onchange="toggleDevice('d4','Perdeler')"><label
+                                for="d4" class="toggle-label"></label>
                         </div>
                         <h4 class="font-bold">Perdeler</h4>
                         <p class="text-xs text-gray-400 mb-2">Salon</p><input type="range" class="w-full" value="30">
                     </div>
                     <div
-                        class="glass-panel p-5 rounded-2xl border border-neon-purple/30 shadow-[0_0_15px_rgba(189,0,255,0.1)]">
+                        class="glass-panel p-5 rounded-2xl border border-neon-purple/30 shadow-[0_0_15px_rgba(189,0,255,0.1)] hover:-translate-y-1 transition duration-300">
                         <div class="flex justify-between mb-4"><i
                                 class="ph-fill ph-desktop-tower text-2xl text-neon-purple"></i><input type="checkbox"
-                                class="toggle-checkbox hidden" checked id="d5"><label for="d5"
-                                class="toggle-label"></label></div>
+                                class="toggle-checkbox hidden" checked id="d5"
+                                onchange="toggleDevice('d5','Gaming PC')"><label for="d5" class="toggle-label"></label>
+                        </div>
                         <h4 class="font-bold">Gaming PC</h4>
                         <p class="text-xs text-gray-400 mb-2">Ofis</p>
                         <div class="flex gap-1">
@@ -644,19 +665,23 @@
                             <div class="w-4 h-4 rounded-full bg-blue-500 opacity-50"></div>
                         </div>
                     </div>
-                    <div class="glass-panel p-5 rounded-2xl">
+                    <div class="glass-panel p-5 rounded-2xl hover:-translate-y-1 transition duration-300">
                         <div class="flex justify-between mb-4"><i
                                 class="ph-fill ph-coffee text-2xl text-amber-500"></i><input type="checkbox"
-                                class="toggle-checkbox hidden" id="d6"><label for="d6" class="toggle-label"></label>
+                                class="toggle-checkbox hidden" id="d6"
+                                onchange="toggleDevice('d6','Kahve Makinesi')"><label for="d6"
+                                class="toggle-label"></label>
                         </div>
                         <h4 class="font-bold">Kahve Makinesi</h4>
                         <p class="text-xs text-gray-400 mb-2">Mutfak</p><button
-                            class="w-full bg-amber-500/20 text-amber-500 py-1 rounded text-xs font-bold hover:bg-amber-500 hover:text-white transition">Hazırla</button>
+                            onclick="addEvent('Kahve Hazırlanıyor','Cihaz Paneli');showToast('Kahve hazırlanıyor ☕','info')"
+                            class="w-full bg-amber-500/20 text-amber-500 py-1 rounded text-xs font-bold hover:bg-amber-500 hover:text-white transition cursor-pointer">Hazırla</button>
                     </div>
-                    <div class="glass-panel p-5 rounded-2xl">
+                    <div class="glass-panel p-5 rounded-2xl hover:-translate-y-1 transition duration-300">
                         <div class="flex justify-between mb-4"><i
                                 class="ph-fill ph-television text-2xl text-pink-500"></i><input type="checkbox"
-                                class="toggle-checkbox hidden" id="d7"><label for="d7" class="toggle-label"></label>
+                                class="toggle-checkbox hidden" id="d7" onchange="toggleDevice('d7','Sony TV')"><label
+                                for="d7" class="toggle-label"></label>
                         </div>
                         <h4 class="font-bold">Sony TV</h4>
                         <p class="text-xs text-gray-400 mb-2">Salon</p><span
@@ -668,45 +693,22 @@
             <div id="security" class="page-content px-4 md:px-8">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div
-                        class="flex flex-col items-center justify-center h-[400px] glass-panel rounded-[2rem] text-center relative overflow-hidden">
+                        class="flex flex-col items-center justify-center h-[420px] glass-panel rounded-[2rem] text-center relative overflow-hidden">
                         <div
                             class="absolute w-[300px] h-[300px] radar-scan animate-radar opacity-100 bg-[conic-gradient(from_0deg,transparent_0deg,rgba(0,255,148,0.05)_60deg,rgba(0,255,148,0.3)_90deg,transparent_91deg)] rounded-full">
                         </div>
-                        <i class="ph-fill ph-shield-check text-7xl text-green-500 mb-4 relative z-10"></i>
-                        <h2 class="text-3xl font-bold relative z-10">Sistem Güvende</h2>
-                        <p class="text-gray-400 mb-6 relative z-10">Tüm sensörler aktif.</p>
-                        <button
-                            class="px-10 py-3 bg-white/5 border border-white/10 rounded-full font-bold hover:bg-red-500 transition relative z-10">Devre
-                            Dışı Bırak</button>
+                        <i id="security-icon"
+                            class="ph-fill ph-shield-check text-7xl text-green-500 mb-4 relative z-10"></i>
+                        <h2 id="security-title" class="text-3xl font-bold relative z-10">Sistem Güvende</h2>
+                        <p id="security-desc" class="text-gray-400 mb-6 relative z-10">Tüm sensörler aktif.</p>
+                        <button id="security-toggle-btn" onclick="toggleAlarm()"
+                            class="px-10 py-3 bg-white/5 border border-white/10 rounded-full font-bold hover:bg-red-500 hover:border-red-500 transition relative z-10 cursor-pointer">Alarmı
+                            Devre Dışı Bırak</button>
                     </div>
                     <div class="glass-panel p-6 rounded-[2rem]">
-                        <h3 class="font-bold text-xl mb-6">Log Kayıtları</h3>
-                        <div class="space-y-4">
-                            <div class="flex gap-4 relative pl-2">
-                                <div class="absolute left-0 top-2 bottom-0 w-0.5 bg-neon-cyan"></div><span
-                                    class="text-neon-cyan font-mono text-xs mt-1">14:02</span>
-                                <div>
-                                    <p class="font-bold text-sm">Hareket Algılandı</p>
-                                    <p class="text-xs text-gray-400">Arka Bahçe Kamerası</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-4 relative pl-2 opacity-60">
-                                <div class="absolute left-0 top-2 bottom-0 w-0.5 bg-gray-700"></div><span
-                                    class="text-gray-400 font-mono text-xs mt-1">12:30</span>
-                                <div>
-                                    <p class="font-bold text-sm">Giriş Yapıldı</p>
-                                    <p class="text-xs text-gray-400">Web Client</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-4 relative pl-2 opacity-60">
-                                <div class="absolute left-0 top-2 bottom-0 w-0.5 bg-gray-700"></div><span
-                                    class="text-gray-400 font-mono text-xs mt-1">09:00</span>
-                                <div>
-                                    <p class="font-bold text-sm">Sistem Başlatıldı</p>
-                                    <p class="text-xs text-gray-400">Otomatik</p>
-                                </div>
-                            </div>
-                        </div>
+                        <h3 class="font-bold text-xl mb-6 flex items-center gap-2"><i
+                                class="ph-fill ph-list-bullets text-neon-cyan"></i> Log Kayıtları</h3>
+                        <div id="security-log-list" class="space-y-4"></div>
                     </div>
                 </div>
             </div>
@@ -744,6 +746,47 @@
                         <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
                             <h3 class="text-xl font-bold">Giriş</h3>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANALİTİK SAYFASI -->
+            <div id="analytics" class="page-content px-4 md:px-8 space-y-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="glass-panel p-5 rounded-2xl text-center border border-neon-cyan/20">
+                        <p class="text-[10px] text-gray-400 uppercase mb-1">Aktif Kullanıcı</p>
+                        <span id="analytics-users" class="text-3xl font-bold text-neon-cyan">0</span>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl text-center border border-neon-purple/20">
+                        <p class="text-[10px] text-gray-400 uppercase mb-1">Toplam Log</p>
+                        <span id="analytics-events" class="text-3xl font-bold text-neon-purple">0</span>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl text-center border border-green-500/20">
+                        <p class="text-[10px] text-gray-400 uppercase mb-1">Aktif Cihaz</p>
+                        <span id="analytics-devices-on" class="text-3xl font-bold text-green-400">0</span>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl text-center border border-yellow-500/20">
+                        <p class="text-[10px] text-gray-400 uppercase mb-1">Güvenlik Skoru</p>
+                        <span id="analytics-security-score" class="text-3xl font-bold text-yellow-400">0</span>
+                    </div>
+                </div>
+                <div class="glass-panel p-5 rounded-2xl">
+                    <p class="text-xs text-gray-400 uppercase mb-2">Güvenlik Skoru</p>
+                    <div class="w-full bg-white/10 rounded-full h-3">
+                        <div id="security-score-bar" class="h-3 rounded-full bg-green-500 transition-all duration-1000"
+                            style="width:0%"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <h3 class="font-bold mb-4 flex items-center gap-2"><i
+                                class="ph-fill ph-chart-bar text-neon-cyan"></i> Haftalık Enerji (kWh)</h3>
+                        <div class="h-64"><canvas id="weeklyBarChart"></canvas></div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <h3 class="font-bold mb-4 flex items-center gap-2"><i
+                                class="ph-fill ph-chart-pie-slice text-neon-purple"></i> Olay Dağılımı</h3>
+                        <div class="h-64"><canvas id="eventPieChart"></canvas></div>
                     </div>
                 </div>
             </div>
@@ -787,48 +830,68 @@
         </div>
     </div>
 
-    <script>
-        // CORE
-        function attemptLogin() { const c = document.getElementById('passcode').value; if (c === '1234') { document.getElementById('login-screen').style.opacity = '0'; setTimeout(() => { document.getElementById('login-screen').style.display = 'none'; initDB(); initChart(); switchPage('dashboard'); }, 700); } else { document.getElementById('login-error').classList.remove('hidden'); } }
-        document.getElementById('passcode').addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin() });
 
-        function switchPage(id) {
-            document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if (window.innerWidth < 768) { document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('sidebar-overlay').classList.add('hidden'); }
-            document.querySelectorAll('.nav-btn').forEach(btn => { btn.classList.remove('text-neon-cyan', 'bg-gradient-to-r', 'from-neon-cyan/10', 'border-neon-cyan'); btn.classList.add('text-gray-400', 'border-transparent'); });
-            const activeBtn = document.getElementById('nav-' + id); if (activeBtn) { activeBtn.classList.add('text-neon-cyan', 'bg-gradient-to-r', 'from-neon-cyan/10', 'border-neon-cyan'); activeBtn.classList.remove('text-gray-400', 'border-transparent'); }
-        }
-        function toggleSidebar() { const sb = document.getElementById('sidebar'); const ov = document.getElementById('sidebar-overlay'); sb.classList.toggle('-translate-x-full'); ov.classList.toggle('hidden'); }
-        function saveDynamicProfile(btn) {
-            const n = document.getElementById('p-name').value, s = document.getElementById('p-surname').value, r = document.getElementById('p-role').value;
-            document.getElementById('sidebar-name').innerText = `${n} ${s[0]}.`; document.getElementById('profile-name-display').innerText = `${n} ${s}`; document.getElementById('profile-role-display').innerText = r; document.getElementById('sidebar-role').innerText = r;
-            const og = btn.innerHTML; btn.innerHTML = '<i class="ph-bold ph-check"></i> Kaydedildi'; btn.classList.add('bg-green-500', 'text-white'); btn.classList.remove('bg-neon-cyan', 'text-black'); setTimeout(() => { btn.innerHTML = og; btn.classList.remove('bg-green-500', 'text-white'); btn.classList.add('bg-neon-cyan', 'text-black'); }, 2000);
-        }
+    <!-- ANALİTİK SAYFASI -->
+    <div id="analytics" class="page-content px-4 md:px-8 space-y-6" style="display:none">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="glass-panel p-5 rounded-2xl text-center border border-neon-cyan/20">
+                <p class="text-[10px] text-gray-400 uppercase mb-1">Aktif Kullanıcı</p>
+                <span id="analytics-users" class="text-3xl font-bold text-neon-cyan">0</span>
+            </div>
+            <div class="glass-panel p-5 rounded-2xl text-center border border-neon-purple/20">
+                <p class="text-[10px] text-gray-400 uppercase mb-1">Toplam Log</p>
+                <span id="analytics-events" class="text-3xl font-bold text-neon-purple">0</span>
+            </div>
+            <div class="glass-panel p-5 rounded-2xl text-center border border-green-500/20">
+                <p class="text-[10px] text-gray-400 uppercase mb-1">Aktif Cihaz</p>
+                <span id="analytics-devices-on" class="text-3xl font-bold text-green-400">0</span>
+            </div>
+            <div class="glass-panel p-5 rounded-2xl text-center border border-yellow-500/20">
+                <p class="text-[10px] text-gray-400 uppercase mb-1">Güvenlik Skoru</p>
+                <span id="analytics-security-score" class="text-3xl font-bold text-yellow-400">0</span>
+            </div>
+        </div>
+        <div class="glass-panel p-5 rounded-2xl">
+            <p class="text-xs text-gray-400 uppercase mb-2">Güvenlik Skoru</p>
+            <div class="w-full bg-white/10 rounded-full h-3">
+                <div id="security-score-bar" class="h-3 rounded-full bg-green-500 transition-all duration-1000"
+                    style="width:0%"></div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="glass-panel p-6 rounded-2xl">
+                <h3 class="font-bold mb-4 flex items-center gap-2"><i class="ph-fill ph-chart-bar text-neon-cyan"></i>
+                    Haftalık Enerji (kWh)</h3>
+                <div class="h-64"><canvas id="weeklyBarChart"></canvas></div>
+            </div>
+            <div class="glass-panel p-6 rounded-2xl">
+                <h3 class="font-bold mb-4 flex items-center gap-2"><i
+                        class="ph-fill ph-chart-pie-slice text-neon-purple"></i> Olay Dağılımı</h3>
+                <div class="h-64"><canvas id="eventPieChart"></canvas></div>
+            </div>
+        </div>
+    </div>
 
-        // DB
-        const schemas = { users: { id: 'ID', name: 'Ad', surname: 'Soyad', status: 'Durum', email: 'E-Posta' }, houses: { id: 'ID', address: 'Adres', ownerId: 'Sahip', type: 'Tip' }, devices: { id: 'ID', name: 'Cihaz', type: 'Tip', roomId: 'Oda', status: 'Durum' }, events: { id: 'ID', date: 'Zaman', event: 'Olay', source: 'Kaynak' } };
-        const db = { users: [{ id: 1, name: 'Thomas', surname: 'Anderson', status: 'Aktif', email: 'thomas@shome.com' }, { id: 2, name: 'Neo', surname: 'One', status: 'Pasif', email: 'neo@matrix.com' }], houses: [{ id: 101, address: 'İzmir No:5', ownerId: 1, type: 'Villa' }], devices: [{ id: 501, name: 'Kamera', type: 'Cam', roomId: 10, status: 'ON' }, { id: 502, name: 'Lamba', type: 'Light', roomId: 11, status: 'OFF' }], events: [{ id: 901, date: '14:02', event: 'Hareket', source: 'Cam-1' }] };
-        let currentTable = 'users', editMode = false, editId = null;
-        function initDB() { updateStats(); changeTable(); }
-        function changeTable() { currentTable = document.getElementById('table-selector').value; renderForm(); renderTable(); }
-        function updateStats() { document.getElementById('stat-users').innerText = db.users.length; document.getElementById('stat-houses').innerText = db.houses.length; document.getElementById('stat-devices').innerText = db.devices.length; document.getElementById('stat-events').innerText = db.events.length; }
-        function renderForm() { const c = document.getElementById('dynamic-form'); c.innerHTML = ''; Object.keys(schemas[currentTable]).forEach(k => { if (k !== 'id') c.innerHTML += `<div><label class="text-[10px] uppercase text-gray-400">${schemas[currentTable][k]}</label><input type="text" id="input-${k}" class="db-input"></div>` }); }
-        function renderTable() { const th = document.getElementById('db-table-head'); const tb = document.getElementById('db-table-body'); const data = db[currentTable]; th.innerHTML = ''; Object.values(schemas[currentTable]).forEach(v => th.innerHTML += `<th>${v}</th>`); th.innerHTML += '<th class="text-right">#</th>'; tb.innerHTML = ''; if (data.length === 0) document.getElementById('empty-state').classList.remove('hidden'); else document.getElementById('empty-state').classList.add('hidden'); data.forEach(row => { let tr = '<tr>'; Object.keys(schemas[currentTable]).forEach(k => tr += `<td>${row[k]}</td>`); tr += `<td class="text-right"><button onclick="editRow(${row.id})" class="text-blue-400 mr-2"><i class="ph-bold ph-pencil-simple"></i></button><button onclick="deleteRow(${row.id})" class="text-red-400"><i class="ph-bold ph-trash"></i></button></td></tr>`; tb.innerHTML += tr; }); }
-        function saveData() { const keys = Object.keys(schemas[currentTable]).filter(k => k !== 'id'); let obj = {}; keys.forEach(k => obj[k] = document.getElementById(`input-${k}`).value); if (editMode) { const idx = db[currentTable].findIndex(x => x.id === editId); obj.id = editId; db[currentTable][idx] = obj; } else { obj.id = Date.now(); db[currentTable].push(obj); } clearForm(); renderTable(); updateStats(); }
-        function deleteRow(id) { db[currentTable] = db[currentTable].filter(x => x.id !== id); renderTable(); updateStats(); }
-        function editRow(id) { const item = db[currentTable].find(x => x.id === id); Object.keys(item).forEach(k => { if (k !== 'id') document.getElementById(`input-${k}`).value = item[k] }); editMode = true; editId = id; document.getElementById('form-title').innerText = 'Düzenle'; document.getElementById('save-btn').innerText = 'Güncelle'; }
-        function clearForm() { document.querySelectorAll('.db-input').forEach(i => i.value = ''); editMode = false; document.getElementById('form-title').innerText = 'Yeni Ekle'; document.getElementById('save-btn').innerText = 'Ekle'; }
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 items-end"></div>
 
-        // --- EXTRAS ---
-        function toggleNotifications(e) { e.stopPropagation(); document.getElementById('notification-panel').classList.toggle('hidden'); }
-        document.onclick = function (e) { if (!e.target.closest('#notification-panel') && !e.target.closest('button')) document.getElementById('notification-panel').classList.add('hidden'); }
-        function openCameraSelector() { document.getElementById('camera-selector-modal').classList.remove('hidden'); document.getElementById('camera-selector-modal').classList.add('flex'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
-        function openRoomDetail(k) { const imgs = { 'salon': 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6', 'kitchen': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f', 'garden': 'https://images.unsplash.com/photo-1628744448840-55bdb2497bd4', 'entrance': 'https://images.unsplash.com/photo-1516455590571-18256e5bb9ff' }; document.getElementById('modal-room-name').innerText = k.toUpperCase(); document.getElementById('main-cam-view').src = imgs[k] + '?q=80&w=1200'; document.getElementById('room-detail-modal').classList.remove('hidden'); document.getElementById('room-detail-modal').classList.add('flex'); }
-        function initChart() { const ctx = document.getElementById('energyChart').getContext('2d'); new Chart(ctx, { type: 'line', data: { labels: ['P', 'S', 'Ç', 'P', 'C', 'C', 'P'], datasets: [{ label: 'kWh', data: [12, 14, 11, 15, 13, 18, 16], borderColor: '#00D2FF', tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } } }); }
-        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }), 1000);
-    </script>
+    <!-- CONFIRM MODAL -->
+    <div id="confirm-modal"
+        class="modal-overlay fixed inset-0 z-[9998] bg-black/80 backdrop-blur-md items-center justify-center hidden">
+        <div
+            class="glass-panel p-8 rounded-3xl max-w-sm w-full mx-4 text-center animate-zoom-in border border-white/10">
+            <i class="ph-fill ph-warning text-5xl text-yellow-400 mb-4"></i>
+            <p id="confirm-message" class="text-white font-medium mb-6"></p>
+            <div class="flex gap-4">
+                <button onclick="cancelConfirm()"
+                    class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition">İptal</button>
+                <button onclick="confirmAction()"
+                    class="flex-1 py-3 bg-red-500 hover:bg-red-400 rounded-xl font-bold transition">Sil</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
 </body>
 
 </html>
